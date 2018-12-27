@@ -1,0 +1,21 @@
+{
+  "name": "auto-eyes",
+  "version": "1.0.0",
+  "description": "Autonomous vehicle to human communication system.",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aroller/auto-eyes.git"
+  },
+  "author": "Aaron Roller",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aroller/auto-eyes/issues"
+  },
+  "homepage": "https://github.com/aroller/auto-eyes#readme"
+}
