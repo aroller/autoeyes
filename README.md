@@ -1,22 +1,19 @@
-# Auto Eyes
+# Auto Eyes 
+
+__Autononomous Vehicle to Human Communication__
+
+Auto Eyes a system that replaces the eye contact, head nods and hand waves
+that drivers give to pedestrians, cyclists and other mobile humans sharing the roads.
+
+See the [website](https://autoeyes.org). 
+
+## Documentation
+
+This repository is for documentation and demonstration of the scenarios
+faced. The website uses [Angular](https://angular.io) + [Material Design](https://material.angular.io). 
 
 
-## Code scaffolding
+Separate repositories are being created that will serve as the controller for the hardware, which is to be determined.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Stay tuned...
