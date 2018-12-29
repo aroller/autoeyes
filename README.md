@@ -16,10 +16,5 @@ faced. The website uses [Angular](https://angular.io) + [Material Design](https:
 Separate repositories are being created that will serve as the controller for the hardware, which is to be determined.
 
 
-Stay tuned...
-
-[I See You](scenario/i-see-you/index.md)
-
-
 
 <iframe src="./scenario/i-see-you/i-see-you.html" style="width: 500px; height: 130px; border: 0px"></iframe>
