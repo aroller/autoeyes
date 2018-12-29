@@ -1,1 +1,4 @@
 theme: jekyll-theme-slate
+title: Auto Eyes
+description: Autonomous Vehicle to Human Communication
+baseurl: /auto-eyes
