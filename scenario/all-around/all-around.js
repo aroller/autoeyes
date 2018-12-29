@@ -1,5 +1,9 @@
 let car;
 
+let targetBearing = 0;
+
+const increment = 2*Math.PI/100;
+
 /**
  * standard processing function called once before draw is called
  */
@@ -13,7 +17,7 @@ function setup() {
  * standard processing function called repeatedly
  */
 function draw() {
-  drawCar(100,250, .75, PI/4);
+    drawCar(100,250, .75, targetBearing += increment );
 }
 
 
