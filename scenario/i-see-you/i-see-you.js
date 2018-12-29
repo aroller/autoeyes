@@ -4,7 +4,7 @@ let car;
  * standard processing function called once before draw is called
  */
 function setup() {
-  createCanvas(1000,1000);
+  createCanvas(500,500);
 
   car = loadImage('../../images/car.png');
 }
@@ -13,7 +13,7 @@ function setup() {
  * standard processing function called repeatedly
  */
 function draw() {
-  drawCar(400,300, .75, PI/4);
+  drawCar(250,250, .75, PI/4);
 }
 
 /**
