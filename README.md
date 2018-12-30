@@ -45,7 +45,7 @@ Open source and open collaboration will provide a safe and consistent solution t
   <p class="lead">
     A string of LEDs on top of the vehicle emits light to communicate with humans outside the vehicle.
   </p>
-  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="{{site.baseurl}}/scenario/i-see-you">Next</a>
+  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="{{site.baseurl}}/scenario/i-see-you">Next &raquo;</a>
 </div>
 
 
