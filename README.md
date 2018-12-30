@@ -42,19 +42,19 @@ Open source and open collaboration will provide a safe and consistent solution t
 
 <div id="scenarioCarousel" class="carousel slide" data-ride="carousel">
   <div class="carousel-inner">
-    <div class="carousel-item active">
+    <div class="carousel-item active" style="text-align:center">
       <iframe src="./scenario/all-around/all-around.html" style="width: 210px; height: 520px; border: 0px;"></iframe>
       <p class="lead">
       A string of LEDs on top of the vehicle emit light to communicate with humans outside the vehicle.
       </p>
     </div>
-    <div class="carousel-item">
+    <div class="carousel-item" style="text-align:center">
       <iframe src="./scenario/i-see-you/i-see-you.html" style="width: 210px; height: 520px; border: 0px;"></iframe>
       <p class="lead">
       Second
       </p>
     </div>
-    <div class="carousel-item">
+    <div class="carousel-item" style="text-align:center">
       <iframe src="./scenario/all-around/all-around.html" style="width: 210px; height: 520px; border: 0px;"></iframe>
       <p class="lead">
        third
