@@ -49,11 +49,16 @@ Open source and open collaboration will provide a safe and consistent solution t
       </p>
     </div>
     <div class="carousel-item">
-      <img class="d-block w-100" src=".../800x400?auto=yes&bg=666&fg=444&text=Second slide" alt="Second slide">
-
+      <iframe src="./scenario/i-see-you/i-see-you.html" style="width: 210px; height: 520px; border: 0px;"></iframe>
+      <p class="lead">
+      Second
+      </p>
     </div>
     <div class="carousel-item">
-      <img class="d-block w-100" src=".../800x400?auto=yes&bg=555&fg=333&text=Third slide" alt="Third slide">
+      <iframe src="./scenario/all-around/all-around.html" style="width: 210px; height: 520px; border: 0px;"></iframe>
+      <p class="lead">
+       third
+      </p>
     </div>
   </div>
   <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -66,9 +71,6 @@ Open source and open collaboration will provide a safe and consistent solution t
   </a>
 </div>
 
-<div style="text-align:center">
-  <iframe src="./scenario/all-around/all-around.html" style="width: 210px; height: 520px; border: 0px;"></iframe>
-</div>
 
 
 
