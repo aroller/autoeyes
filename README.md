@@ -8,7 +8,7 @@ Remember, if a pedestrian makes eye contact with you, they are ready to cross th
 
 
 ## No Eyes?
-<img src="src/assets/images/noun_driverless%20car_1581548.svg" style="float:right;"   style="float:left;" width="100px" title="driverless car by Gan Khoon Lay from the Noun Project">
+<img src="src/assets/images/noun_driverless%20car_1581548.svg" style="float:right;"   style="float:left;" width="35px" title="driverless car by Gan Khoon Lay from the Noun Project">
 Self-driving vehicles don't have a human at the wheel so pedestrians need confirmation they are seen.
         Eye contact, head nods and hand waves need replacement.
 
