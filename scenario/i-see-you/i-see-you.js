@@ -5,7 +5,7 @@ let car;
  */
 function setup() {
   createCanvas(300,500);
-
+  background(backgroundColor);
   car = loadImage('../../images/car.png');
 }
 

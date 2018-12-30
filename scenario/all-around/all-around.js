@@ -17,7 +17,9 @@ function setup() {
  * standard processing function called repeatedly
  */
 function draw() {
-    drawCar(100,250, .75, targetBearing += increment );
+  background(backgroundColor);
+
+  drawCar(100,250, .75, targetBearing += increment );
 }
 
 
