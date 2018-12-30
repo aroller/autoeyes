@@ -2,7 +2,7 @@
 ### I See You
 
 <div class="text-center">
-  <iframe src="./i-see-you.html" style="width: 100%; height: 520px; border: 0px"></iframe>
+  <iframe src="./i-see-you.html" style="width: 100%; height: 520px; border: 0px" align="center"></iframe>
   <p class="lead">
     Light is emitted towards a pedestrian near the vehicle. 
   </p>
