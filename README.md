@@ -32,7 +32,7 @@ Open source and open collaboration will provide a safe and consistent solution t
 
 ---
 
-<div style="text-align:center">
+<div class="text-center">
   <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="https://docs.google.com/document/d/1lKIsqMYYO7nQ937QXdCg2oaPqeo0iI2x5D2HwVKsVNE/edit?usp=sharing">Read the White Paper</a>
 </div>
 
@@ -40,36 +40,14 @@ Open source and open collaboration will provide a safe and consistent solution t
 
 ### Learn More...
 
-<div id="scenarioCarousel" class="carousel slide" data-ride="carousel">
-  <div class="carousel-inner">
-    <div class="carousel-item active" style="text-align:center">
-      <iframe src="./scenario/all-around/all-around.html" style="width: 210px; height: 520px; border: 0px;"></iframe>
-      <p class="lead">
+ <div class="text-center">
+    <iframe src="./scenario/all-around/all-around.html" style="width: 210px; height: 520px; border: 0px;"></iframe>
+    <p class="lead">
       A string of LEDs on top of the vehicle emit light to communicate with humans outside the vehicle.
-      </p>
-    </div>
-    <div class="carousel-item" style="text-align:center">
-      <iframe src="./scenario/i-see-you/i-see-you.html" style="width: 210px; height: 520px; border: 0px;"></iframe>
-      <p class="lead">
-      Second
-      </p>
-    </div>
-    <div class="carousel-item" style="text-align:center">
-      <iframe src="./scenario/all-around/all-around.html" style="width: 210px; height: 520px; border: 0px;"></iframe>
-      <p class="lead">
-       third
-      </p>
-    </div>
-  </div>
-  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
-</div>
+    </p>
+    <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="{{site.baseurl}}/scenarios/i-see-you">Next</a>
+ </div>
+
 
 
 
