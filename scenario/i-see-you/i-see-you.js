@@ -4,7 +4,7 @@ let car;
  * standard processing function called once before draw is called
  */
 function setup() {
-  createCanvas(300,500);
+  createCanvas(300,400);
   background(backgroundColor);
   car = loadImage('../../images/car.png');
 }

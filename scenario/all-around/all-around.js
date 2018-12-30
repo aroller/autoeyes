@@ -8,7 +8,7 @@ const increment = 2*Math.PI/100;
  * standard processing function called once before draw is called
  */
 function setup() {
-  createCanvas(200,500);
+  createCanvas(250,400);
 
   car = loadImage('../../images/car.png');
 }
@@ -19,7 +19,7 @@ function setup() {
 function draw() {
   background(backgroundColor);
 
-  drawCar(100,250, .75, targetBearing += increment );
+  drawCar(125,200, .75, targetBearing += increment );
 }
 
 
