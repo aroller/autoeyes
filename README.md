@@ -32,7 +32,9 @@ Open source and open collaboration will provide a safe and consistent solution t
 
 ---
 
-<a  href="https://docs.google.com/document/d/1lKIsqMYYO7nQ937QXdCg2oaPqeo0iI2x5D2HwVKsVNE/edit?usp=sharing">Read the White Paper</a>
+<div style="text-align:center">
+  <a  href="https://docs.google.com/document/d/1lKIsqMYYO7nQ937QXdCg2oaPqeo0iI2x5D2HwVKsVNE/edit?usp=sharing">Read the White Paper</a>
+</div>
 
 ---
 
@@ -42,3 +44,6 @@ Open source and open collaboration will provide a safe and consistent solution t
   <iframe src="./scenario/all-around/all-around.html" style="width: 200px; height: 550px; border: 0px;"></iframe>
 </div>
 
+<div style="text-align:center">
+  <b>A string of LEDs on top of the vehicle emit light to communicate with humans outside the vehicle.</b>
+</div>
