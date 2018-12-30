@@ -1,8 +1,8 @@
 let car;
 
-let pedX = 200;
-
+const pedXOffThePage = -100;
 const canvasWidth = 500;
+let pedX = pedXOffThePage;
 /**
  * standard processing function called once before draw is called
  */
@@ -42,7 +42,7 @@ function draw() {
     drawCar(carX,carY, .50,targetBearing);
 
     //reset x with some buffer to repeat loop
-    if(pedX < -100){
+    if(pedX < pedXOffThePage){
       //reset to off the right side of the page
       pedX = canvasWidth + 50;
     }
