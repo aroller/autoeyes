@@ -1,26 +1,29 @@
 __Autononomous Vehicle to Human Communication__
 
 
-<img style="float:right;" src="images/eye-contact.png" width="50px" title="driverless car by Gan Khoon Lay from the Noun Project">
+<img src="images/eye-contact.png" width="50px" style="float:right;"  title="driverless car by Gan Khoon Lay from the Noun Project">
 
 ## Eye Contact 
 
 Remember, if a pedestrian makes eye contact with you, they are ready to cross the street. Yield to the pedestrian. --California Driver Handbook
 
 
+<img src="images/noun_driverless car_456564.png" style="float:right;"   style="float:right;" width="50px" >
 
-## No Eyes? <img src="src/assets/images/noun_driverless%20car_1581548.svg" style="float:right;"   style="float:right;" width="50px" title="driverless car by Gan Khoon Lay from the Noun Project">
+## No Eyes? 
 
 Self-driving vehicles don't have a human at the wheel so pedestrians need confirmation they are seen.
         Eye contact, head nods and hand waves need replacement.
 
+<img src="images/i-see-you.png" width="50px"  style="float:right;">
 
-## Autos Need Eyes <img src="images/i-see-you.png" width="50px"  style="float:right;">
+## Autos Need Eyes 
 
 <a href="https://autoeyes.org" title="Auto Eyes Website">Auto Eyes</a>&trade; is a simple lighting system for one-way communication from the robot to pedestrians, cyclists and other mobile humans.
 
+<img src="images/Open-source-hardware-logo.svg" width="50px" style="float:right;"  title="Open Source Software / Hardware">
 
-## Open Source <img src="src/assets/images/Open-source-hardware-logo.svg" width="50px" style="float:right;"  title="Open Source Software / Hardware">
+## Open Source 
 
 Open source and open collaboration will provide a safe and consistent solution to society for the best adoption of autonomous vehicles.
 <a href="https://github.com/aroller/auto-eyes"><img src="src/assets/images/GitHub-Mark-120px-plus.png" title="Github Repository" width="15px"/> </a>
