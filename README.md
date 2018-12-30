@@ -41,9 +41,7 @@ Open source and open collaboration will provide a safe and consistent solution t
 ### Learn More...
 
 <div style="text-align:center">
-  <iframe src="./scenario/all-around/all-around.html" style="width: 200px; height: 550px; border: 0px;"></iframe>
-</div>
-
-<div style="text-align:center">
+  <iframe src="./scenario/all-around/all-around.html" style="width: 210px; height: 515px; border: 0px;"></iframe>
   <b>A string of LEDs on top of the vehicle emit light to communicate with humans outside the vehicle.</b>
 </div>
+
