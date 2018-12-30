@@ -4,16 +4,34 @@ let car;
  * standard processing function called once before draw is called
  */
 function setup() {
-  createCanvas(200,500);
+  createCanvas(300,500);
 
   car = loadImage('../../images/car.png');
 }
 
+function pedestrian(pedX,pedY){
+
+  translate(pedX,pedY);
+  fill("#000000");
+  ellipse(0,0,20,20);
+  strokeWeight(5);
+  line(-12, 12,5, 12);
+  line(-12,-12,5,-12);
+  textSize(20);
+  translate(-pedX,-pedY);
+
+}
 /**
  * standard processing function called repeatedly
  */
 function draw() {
-  drawCar(100,250, .75, PI/4);
+  pedestrian(175,75);
+  text("Pedestrian",130,50);
+  text("Light",150,200);
+  drawCar(75,250, .50, PI/6);
+
+
+
 }
 
 

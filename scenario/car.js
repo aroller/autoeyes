@@ -51,7 +51,7 @@ let drawLights = function (carLength, targetBearing) {
     //light the pixels towars the target
     if (bearingWithinTolerance(bearing, targetBearing, angleLitTowardsTarget)) {
       fill(lightColor);
-      pixelHeight = pixelSize * 3;
+      pixelHeight = 70;
       pixelY = pixelY - pixelHeight + pixelSize;
     } else {
       fill(pixelOffColor);
