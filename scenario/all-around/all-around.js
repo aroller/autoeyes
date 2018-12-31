@@ -1,6 +1,6 @@
 let car;
 
-let targetBearing = 0;
+let fakeTargetBearing = 0;
 
 const increment = 2*Math.PI/100;
 
@@ -19,7 +19,7 @@ function setup() {
 function draw() {
   background(backgroundColor);
 
-  drawCar(125,200, .75, targetBearing += increment );
+  drawCar(125,200, .75, fakeTargetBearing += increment );
 }
 
 

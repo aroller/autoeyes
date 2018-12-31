@@ -1,3 +1,6 @@
+/*
+ Shows the vehicle watching a pedestrian walk in front, like in a crosswalk.
+ */
 let car;
 
 const pedXOffThePage = -100;
@@ -24,22 +27,16 @@ function draw() {
 
     pedestrian(pedX-=1,pedY);
 
-    let targetBearing;
+    let pedBearing;
 
     //only show lights when ped is in view
     if(pedX < canvasWidth && pedX > 0) {
-      //____ ped
-      //| /
-      //|/
-      //car
-      const adjacent = pedY - carY;
-      const opposite = pedX - carX;
-      targetBearing = -Math.atan(opposite/adjacent);
+      pedBearing = targetBearing(carX,carY,pedX,pedY)
     }
 
 
 
-    drawCar(carX,carY, .50,targetBearing);
+    drawCar(carX,carY, .50,pedBearing);
 
     //reset x with some buffer to repeat loop
     if(pedX < pedXOffThePage){

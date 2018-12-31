@@ -2,16 +2,13 @@
 const backgroundColor = "#F2F2F2";
 
 
-
-
-
 /**
  * Normalizes the radians given to ensure it is within 0 <= x < 2PI
  * @param radians
  * @return {*}
  */
 function normalizeRadians(radians){
-  const fullCircle = 2*PI;
+  const fullCircle = 2*Math.PI;
   while(radians >= fullCircle){
     radians -= fullCircle;
   }
@@ -39,10 +36,10 @@ let drawLights = function (carLength, targetBearing) {
   const centerPointY = carLength / 8;
   translate(0, centerPointY);
   noStroke();
-  const angleBetweenPixels = 2 * PI / pixelCount;
+  const angleBetweenPixels = 2 * Math.PI / pixelCount;
   let radius = carLength / 9;
   fill(lightColor);
-  const angleLitTowardsTarget = PI / 16;
+  const angleLitTowardsTarget = Math.PI / 16;
 
   const pixelX = -pixelSize / 2;
   for (let i = 0; i < pixelCount; i++) {
@@ -124,4 +121,28 @@ function pedestrian(pedX,pedY){
 
   translate(-pedX,-pedY);
 
+}
+
+
+/** Calculates the angle from the car to the target to instruct where the lights should point.
+ *
+ *  //____ target
+ *  //| /
+ *  //|/
+ *  //car
+ * @param carX
+ * @param carY
+ * @param targetX
+ * @param targetY
+ * @return {number}
+ */
+function targetBearing(carX, carY, targetX, targetY){
+
+  //equation for tan2 assumes y grows up, but for us y grows down so no negation necessary
+  //https://stackoverflow.com/questions/2676719
+  const deltaX = targetX - carX;
+  const deltaY = targetY - carY;
+  const clockwiseAngleFromXAxis = Math.atan2(deltaY, deltaX);
+  const clockwiseAngleFromYAxis = clockwiseAngleFromXAxis + Math.PI/2;
+  return normalizeRadians(  clockwiseAngleFromYAxis );
 }

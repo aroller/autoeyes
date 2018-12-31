@@ -5,6 +5,6 @@
   <p class="lead">
     Bicyclists can ride safely from behind since autonomous vehicles do not have blind spots.  
   </p>
-  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="{{site.baseurl}}/scenario/i-see-you">&laquo; Previous</a>
-  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="{{site.baseurl}}/scenario/not-alone">Next &raquo;</a>
+  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="{{site.baseurl}}/scenario/no-sneaking">&laquo; Previous</a>
+  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="{{site.baseurl}}/scenario/no-sneaking">Next &raquo;</a>
 </div>
