@@ -1,4 +1,4 @@
-let car;
+let carImage;
 
 let fakeTargetBearing = 0;
 
@@ -10,7 +10,7 @@ const increment = 2*Math.PI/100;
 function setup() {
   createCanvas(250,400);
 
-  car = loadImage('../../images/car.png');
+  carImage = loadCarImage();
 }
 
 /**
@@ -19,7 +19,9 @@ function setup() {
 function draw() {
   background(backgroundColor);
 
-  drawCar(125,200, .75, fakeTargetBearing += increment );
+  const car = drawCar(carImage,125,200, .75 );
+  car.addTarget().setBearing(fakeTargetBearing += increment);
+  car.drawLights();
 }
 
 

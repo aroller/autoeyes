@@ -1,39 +1,31 @@
 /*
-  Shows the vehicle watching a bicyclist passing from behind, like in a bike lane.
+  Shows multiple pedestrians walking in a group and separating.
  */
-let car;
-let bike;
-
+let carImage;
 const scale = 0.5;
 
-const canvasWidth = 300;
+const canvasWidth = 500;
 const canvasHeight = 400;
 
-const carX = canvasWidth / 4;
-const carY = canvasHeight / 2;
+const carX = canvasWidth / 2;
+const carY = canvasHeight * 2 / 3;
 
-const bikeX = canvasWidth * 3/4;
-const bikeYStart = canvasHeight + 100;
-let bikeY = bikeYStart;
+const pedXStart = canvasWidth;
+let ped1X = pedXStart;
+const ped1Y = 20;
+let ped2X = pedXStart;
+const ped2Y = 40;
+let ped3X = pedXStart;
+const ped3Y = 60;
 
 /**
  * standard processing function called once before draw is called
  */
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
-  car = loadImage('../../images/car.png');
-  loadBike();
+  carImage = loadCarImage();
 }
 
-
-function loadBike() {
-  bike = loadImage('../../images/bike.png');
-}
-
-function drawBike(x, y, scale) {
-  //draw from the center of the image.  height/4 looked better than /2 for an unknown reason
-  image(bike, x - bike.width/2, y-bike.height/4, bike.width * scale, bike.height * scale);
-}
 
 /**
  * standard processing function called repeatedly
@@ -41,21 +33,31 @@ function drawBike(x, y, scale) {
 function draw() {
   background(backgroundColor);
 
-  let bikeBearing;
-  //when bike is off the page far enough, reset for the repeating loop
-  if (bikeY < -200) {
-    bikeY = bikeYStart;
+
+  ped1X -= 1;
+  ped2X -= 2;
+  ped3X -= 3;
+
+  const car = drawCar(carImage, carX, carY, scale);
+
+  if (ped1X > 0) {
+    car.addTarget().bearing(ped1X,ped1Y);
+  } else {
+    ped1X = pedXStart;
+    ped2X = pedXStart;
+    ped3X = pedXStart;
   }
-
-  if (bikeY < canvasHeight && canvasHeight > 0) {
-    bikeBearing = targetBearing(carX, carY, bikeX, bikeY);
+  if (ped2X > 0) {
+    car.addTarget().bearing(ped2X,ped2Y);
   }
-  drawCar(carX, carY, scale, bikeBearing);
-  drawBike(bikeX, bikeY, scale);
+  if (ped3X > 0) {
+    car.addTarget().bearing(ped3X,ped3Y);
+  }
+  car.drawLights();
 
-
-  bikeY -= 2;
-
+  drawPedestrian(ped1X, ped1Y, "#FF0000");
+  drawPedestrian(ped2X, ped2Y, "#FF8800");
+  drawPedestrian(ped3X, ped3Y, "#FF00FF");
 }
 
 

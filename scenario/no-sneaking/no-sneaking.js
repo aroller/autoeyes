@@ -1,8 +1,8 @@
 /*
-  Shows the vehicle watching a bicyclist passing from behind, like in a bike lane.
+  Shows the vehicle watching a bicyclist passing from behind, like in a bikeImage lane.
  */
-let car;
-let bike;
+let carImage;
+let bikeImage;
 
 const scale = 0.5;
 
@@ -21,19 +21,10 @@ let bikeY = bikeYStart;
  */
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
-  car = loadImage('../../images/car.png');
-  loadBike();
+  carImage =  loadCarImage();
+  bikeImage = loadBikeImage();
 }
 
-
-function loadBike() {
-  bike = loadImage('../../images/bike.png');
-}
-
-function drawBike(x, y, scale) {
-  //draw from the center of the image.  height/4 looked better than /2 for an unknown reason
-  image(bike, x - bike.width/2, y-bike.height/4, bike.width * scale, bike.height * scale);
-}
 
 /**
  * standard processing function called repeatedly
@@ -41,18 +32,18 @@ function drawBike(x, y, scale) {
 function draw() {
   background(backgroundColor);
 
-  let bikeBearing;
-  //when bike is off the page far enough, reset for the repeating loop
+  //when bikeImage is off the page far enough, reset for the repeating loop
   if (bikeY < -200) {
     bikeY = bikeYStart;
   }
 
-  if (bikeY < canvasHeight && canvasHeight > 0) {
-    bikeBearing = targetBearing(carX, carY, bikeX, bikeY);
+  const car = drawCar(carImage,carX, carY, scale);
+  //FIXME: the bike should determine if it is on screen
+  if (bikeY < canvasHeight && bikeY > -bikeImage.height * scale) {
+    car.addTarget().bearing(bikeX,bikeY);
   }
-  drawCar(carX, carY, scale, bikeBearing);
-  drawBike(bikeX, bikeY, scale);
-
+  car.drawLights();
+  drawBike(bikeImage, bikeX, bikeY, scale);
 
   bikeY -= 2;
 
