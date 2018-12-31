@@ -6,7 +6,7 @@
   <p class="lead">
     Light is emitted towards a pedestrian near the vehicle. 
   </p>
-  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="{{site.baseurl}}/">&laquo; Previous</a>
-  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="{{site.baseurl}}/scenario/i-watch-you">Next &raquo;</a>
+  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="/">&laquo; Previous</a>
+  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="/scenario/i-watch-you">Next &raquo;</a>
 </div>
 
