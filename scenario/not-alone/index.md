@@ -1,7 +1,7 @@
 ### You're Not Alone
 
 <div class="text-center">
-  <iframe src="./not-alone.html" style="width: 320px; height: 420px; border: 0px" align="center"></iframe>
+  <iframe src="./not-alone.html" style="width: 520px; height: 420px; border: 0px" align="center"></iframe>
   <p class="lead">
     Those in a group see the same lights, but indvidual lights follow each pedestrian as they separate.
   </p>
