@@ -6,6 +6,8 @@ let carImage;
 const pedXOffThePage = -100;
 const canvasWidth = 300;
 let pedX = pedXOffThePage;
+let car;
+let pedTarget;
 
 /**
  * standard processing function called once before draw is called
@@ -28,18 +30,28 @@ function draw() {
 
   drawPedestrian(pedX -= 1, pedY);
 
+  if(carImage.height > 1){
+    if(car){
+      car.draw();
+    }else{
+      car = drawCar(carImage, carX, carY, .50);
+      pedTarget = car.addTarget()
+    }
+    //only show lights when ped is in view
+    if (pedX < canvasWidth && pedX > 0) {
+      pedTarget.bearing(pedX,pedY);
+    }else{
+      pedTarget.hidden();
+    }
+    car.drawLights();
+    //reset x with some buffer to repeat loop
+    if (pedX < pedXOffThePage) {
+      //reset to off the right side of the page
+      pedX = canvasWidth + 50;
+    }
+  }
 
-  const car = drawCar(carImage, carX, carY, .50);
-  //only show lights when ped is in view
-  if (pedX < canvasWidth && pedX > 0) {
-    car.addTarget().bearing(pedX,pedY);
-  }
-  car.drawLights();
-  //reset x with some buffer to repeat loop
-  if (pedX < pedXOffThePage) {
-    //reset to off the right side of the page
-    pedX = canvasWidth + 50;
-  }
+
 }
 
 

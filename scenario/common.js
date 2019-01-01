@@ -25,23 +25,25 @@ function normalizeRadians(radians) {
 /**
  * Draws the carImage and the light string.
  *
- * @param car the image of the carImage to be drawn..preloaded in setup using loadCarImage()
+ * @param carImage the image of the carImage to be drawn..preloaded in setup using loadCarImage()
  * @param carX horizontal location for center of the carImage
  * @param carY vertical location for center of the carImage
  * @param scale the multiplier of the size of the image.  1 = full size, < 1 is smaller, > 1 is bigger
  * @param targetBearing the angle, in radians, from the forward center of the carImage
  */
-function drawCar(car, carX, carY, scale) {
+function drawCar(carImage, carX, carY, scale) {
+
+
+  const carLength = carImage.height * scale;
+
   //draw the carImage around the center of the given location
   translate(carX, carY);
 
-  targetBearing = normalizeRadians(targetBearing);
-  const carWidth = car.width * scale;
-  const carLength = car.height * scale;
+  const carWidth = carImage.width * scale;
 
   //draw the carImage first, then the light strip on top
-  image(car, -carWidth / 2, -carLength / 2, carWidth, carLength);
-
+  image(carImage, -carWidth / 2, -carLength / 2, carWidth, carLength);
+  translate(-carX, -carY);
 
 
   return {
@@ -53,8 +55,6 @@ function drawCar(car, carX, carY, scale) {
 
     /**Call addTarget to produce a target */
     _targets: [],
-    /**True if drawLights is called.*/
-    lightsShown: false,
 
     addTarget: function(){
       const target = {
@@ -64,6 +64,9 @@ function drawCar(car, carX, carY, scale) {
         bearing: function (targetX, targetY) {
           this._bearing = targetBearing(carX, carY, targetX, targetY);
         },
+        hidden: function(){
+          this._bearing = undefined;
+        },
         setBearing: function(bearing){
           this._bearing = normalizeRadians(bearing);
         },
@@ -71,14 +74,24 @@ function drawCar(car, carX, carY, scale) {
       this._targets.push(target);
       return target;
     },
+    draw: function(){
+      //draw the carImage around the center of the given location
+      translate(carX, carY);
 
+      targetBearing = normalizeRadians(targetBearing);
+      const carWidth = carImage.width * scale;
+
+      //draw the carImage first, then the light strip on top
+      image(carImage, -carWidth / 2, -carLength / 2, carWidth, carLength);
+      translate(-carX, -carY);
+
+    },
     /**
      * Draws a light string on top of the carImage highlighting the lights toward the given target.
      */
     drawLights: function () {
-      if(this.lightsShown){
-        throw "Draw lights only once.";
-      }
+      translate(carX, carY);
+
       const pixelSize = 2;
 
       //draw each pixel by rotating
@@ -88,8 +101,8 @@ function drawCar(car, carX, carY, scale) {
       translate(0, centerPointY);
       noStroke();
       const angleBetweenPixels = 2 * Math.PI / this._pixelCount;
-      let radius = carLength / 9;
 
+      let radius = carLength / 9;
       const angleLitTowardsTarget = Math.PI / 20;
 
       const pixelX = -pixelSize / 2;
@@ -117,7 +130,6 @@ function drawCar(car, carX, carY, scale) {
       }
       //reset the coordinates back to origin allowing future drawing
       translate(-carX, -carY);
-      this.lightsShown = true;
     },
   }
 

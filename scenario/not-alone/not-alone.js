@@ -4,7 +4,7 @@
 let carImage;
 const scale = 0.5;
 
-const canvasWidth = 500;
+const canvasWidth = 400;
 const canvasHeight = 400;
 
 const carX = canvasWidth / 2;
