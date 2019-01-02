@@ -5,7 +5,7 @@ __Autononomous Vehicle to Human Communication__
 
 ## Eye Contact 
 
-Remember, if a pedestrian makes eye contact with you, they are ready to cross the street. Yield to the pedestrian. --California Driver Handbook
+‟_Remember, if a pedestrian makes eye contact with you, they are ready to cross the street. Yield to the pedestrian.” --[California Driver Handbook](https://www.dmv.ca.gov/portal/dmv/detail/pubs/hdbk/right_of_way)
 
 
 <img src="images/noun_driverless car_456564.png" style="float:right;"   style="float:right;" width="50px" >
@@ -19,14 +19,13 @@ Self-driving vehicles don't have a human at the wheel so pedestrians need confir
 
 ## Autos Need Eyes 
 
-<a href="https://autoeyes.org" title="Auto Eyes Website">Auto Eyes</a>&trade; is a simple lighting system for one-way communication from the robot to pedestrians, cyclists and other mobile humans.
+<a href="https://autoeyes.org" title="Auto Eyes Website">Project Auto Eyes</a> is a simple lighting system for one-way communication from the robot to pedestrians, cyclists and other mobile humans.
 
 <img src="images/Open-source-hardware-logo.svg" width="50px" style="float:right;"  title="Open Source Software / Hardware">
 
 ## Open Source 
 
 Open source and open collaboration will provide a safe and consistent solution to society for the best adoption of autonomous vehicles.
-<a href="https://github.com/aroller/auto-eyes"><img src="src/assets/images/GitHub-Mark-120px-plus.png" title="Github Repository" width="15px"/> </a>
 
 
 
