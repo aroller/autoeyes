@@ -4,7 +4,7 @@
 let carImage;
 
 const canvasWidth = 300;
-const pedXOffThePage = canvasWidth + 20;
+const pedXOffThePage = canvasWidth + 50;
 let pedX = pedXOffThePage;
 let car;
 let pedTarget;
@@ -36,7 +36,7 @@ function draw() {
       car.draw();
     }else{
       car = drawCar(carImage, carX, carY, .50);
-      pedTarget = car.addTarget().rightIntent();
+      pedTarget = car.addTarget().rightIntent().withLightColor("#88DD33");
     }
     //only show lights when ped is in view
     if (pedX < canvasWidth && pedX > 0) {
@@ -46,7 +46,7 @@ function draw() {
       //reset x with some buffer to repeat loop
       if (pedX > pedXOffThePage) {
         //reset to off the right side of the page
-        pedX = -50;
+        pedX = -10;
       }
     }
     car.drawLights();

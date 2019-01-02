@@ -84,6 +84,10 @@ function drawCar(carImage, carX, carY, scale) {
           this._intentDirection = 1;
           return this;
         },
+        withLightColor(color){
+          this._lightColor = color;
+          return this;
+        },
         hasIntentDirection: function () {
           return this._intentDirection !== undefined;
         }
