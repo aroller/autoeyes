@@ -21,3 +21,8 @@ assertEquals(targetBearing(0,0,10,-10),normalizeRadians(Math.PI/4),"northeast");
 assertEquals(targetBearing(0,0,-10,-10),normalizeRadians(-Math.PI/4),"northwest");
 assertEquals(targetBearing(0,0,10,10),normalizeRadians(3*Math.PI/4),"southeast");
 assertEquals(targetBearing(0,0,-10,10),normalizeRadians(-3*Math.PI/4),"southwest");
+
+
+assert(bearingWithinTolerance(0,0,0),"exact values with no tolerance are in tolerance");
+assert(bearingWithinTolerance(0,normalizeRadians(-.01),.1),"large target is within tolerance of zero");
+assert(bearingWithinTolerance(0,0.1,.1),"small target angle is within tolerance");

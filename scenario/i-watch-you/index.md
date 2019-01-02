@@ -1,7 +1,7 @@
 ### I'm Watching You
 
 <div class="text-center">
-  <iframe src="./i-watch-you.html" style="width: 520px; height: 420px; border: 0px" align="center"></iframe>
+  <iframe src="./i-watch-you.html" style="width: 320px; height: 420px; border: 0px" align="center"></iframe>
   <p class="lead">
     The light follows the pedestrian giving comfort and education knowing the vehicle is watching. 
   </p>

@@ -21,7 +21,6 @@ function normalizeRadians(radians) {
 }
 
 
-
 /**
  * Draws the carImage and the light string.
  *
@@ -29,7 +28,6 @@ function normalizeRadians(radians) {
  * @param carX horizontal location for center of the carImage
  * @param carY vertical location for center of the carImage
  * @param scale the multiplier of the size of the image.  1 = full size, < 1 is smaller, > 1 is bigger
- * @param targetBearing the angle, in radians, from the forward center of the carImage
  */
 function drawCar(carImage, carX, carY, scale) {
 
@@ -56,25 +54,49 @@ function drawCar(carImage, carX, carY, scale) {
     /**Call addTarget to produce a target */
     _targets: [],
 
-    addTarget: function(){
+    /**keyed by the target id, identifies the amount of illumination to be displayed.
+     * The value is the number of pixels the light is to show*/
+    _targetIntentDirectionIlluminationGoals: {},
+
+    /** Creates a new target and adds it to the targets the car is tracking. */
+    addTarget: function () {
       const target = {
-        _bearing:undefined,
+        /**unique identifier used to reference a target.*/
+        id: undefined,
+        _bearing: undefined,
         _lightColor: "#FF0000",
+        /**optionally indicates if the target is moving right or left from the driver perspective.*/
+        _intentDirection: undefined,
         /**Calculates the bearing to the target from the carImage given the carX,carY*/
         bearing: function (targetX, targetY) {
           this._bearing = targetBearing(carX, carY, targetX, targetY);
+          return this;
         },
-        hidden: function(){
+        hidden: function () {
           this._bearing = undefined;
+          return this;
         },
-        setBearing: function(bearing){
+        setBearing: function (bearing) {
           this._bearing = normalizeRadians(bearing);
+          return this;
         },
+        rightIntent: function () {
+          this._intentDirection = 1;
+          return this;
+        },
+        hasIntentDirection: function () {
+          return this._intentDirection !== undefined;
+        }
       };
+      target.id = Math.random().toString(36).substring(7);
       this._targets.push(target);
       return target;
     },
-    draw: function(){
+
+    /**
+     * Draws the car with the details given during the drawCar creation.
+     */
+    draw: function () {
       //draw the carImage around the center of the given location
       translate(carX, carY);
 
@@ -104,8 +126,14 @@ function drawCar(carImage, carX, carY, scale) {
 
       let radius = carLength / 9;
       const angleLitTowardsTarget = Math.PI / 20;
-
       const pixelX = -pixelSize / 2;
+
+      /** For targets with a directional intent.
+       * As each light related to a target is displayed, the value assigned by the target.id goes up
+       * as it attempts to reach the goal that persists across the loops.*/
+      const targetIntentDirectionIlluminationShowing = {};
+      const illuminatedPixelHeight = 70;
+
       for (let i = 0; i < this._pixelCount; i++) {
         const bearing = i * angleBetweenPixels;
         let pixelHeight = pixelSize;
@@ -117,9 +145,36 @@ function drawCar(carImage, carX, carY, scale) {
         const target = anyTargetWithinTolerance(bearing, this._targets, angleLitTowardsTarget);
         //light the pixels towards the target
         if (target) {
+          //larger pixel height shows illumination
           fill(target._lightColor);
-          pixelHeight = 70;
-          pixelY = pixelY - pixelHeight + pixelSize;
+
+          //currently only works with right intent
+          if (target.hasIntentDirection()) {
+            let goal = this._targetIntentDirectionIlluminationGoals[target.id];
+            if (!goal) {
+              goal = 1;
+              this._targetIntentDirectionIlluminationGoals[target.id] = goal;
+            }
+            let current = targetIntentDirectionIlluminationShowing[target.id];
+            if(!current){
+              current = 0;
+              targetIntentDirectionIlluminationShowing[target.id] = current;
+            }
+            if (current < goal) {
+              if(goal - current < illuminatedPixelHeight){
+                pixelHeight = goal - current;
+              }else{
+                pixelHeight = illuminatedPixelHeight;
+              }
+              pixelY = pixelY - pixelHeight + pixelSize;
+              targetIntentDirectionIlluminationShowing[target.id] += pixelHeight;
+            }
+          }else{
+            //grow the light to match the illumination
+            pixelHeight = illuminatedPixelHeight;
+            pixelY = pixelY - pixelHeight + pixelSize;
+          }
+
         } else {
           fill(pixelOffColor);
         }
@@ -130,6 +185,18 @@ function drawCar(carImage, carX, carY, scale) {
       }
       //reset the coordinates back to origin allowing future drawing
       translate(-carX, -carY);
+      //increment the goals for any target with directional intent so the illumination increases.
+      Object.keys(this._targetIntentDirectionIlluminationGoals).forEach(key => {
+        let illuminationGoal = this._targetIntentDirectionIlluminationGoals[key] + 5;
+        const maxLightsIlluminated =10;
+        const maxIllumination = illuminatedPixelHeight * maxLightsIlluminated;
+        if(this._targetIntentDirectionIlluminationGoals[key] > maxIllumination){
+          illuminationGoal = 0;
+        }
+
+        this._targetIntentDirectionIlluminationGoals[key] = illuminationGoal;
+      });
+
     },
   }
 
@@ -147,9 +214,9 @@ function bearingWithinTolerance(bearing, targetBearing, angleOfTolerance) {
 
   return bearing >= targetBearing - angleOfTolerance && bearing <= targetBearing + angleOfTolerance ||
     //when close to zero, the largest angles may be within tolerance
-    bearing >= targetBearing + 2 * PI - angleOfTolerance && bearing <= targetBearing + 2 * PI + angleOfTolerance ||
+    bearing >= targetBearing + 2 * Math.PI - angleOfTolerance && bearing <= targetBearing + 2 * Math.PI + angleOfTolerance ||
     //when close to the largest angles, the lowest angles may be within tolerance
-    bearing >= targetBearing - 2 * PI - angleOfTolerance && bearing <= targetBearing - 2 * PI + angleOfTolerance;
+    bearing >= targetBearing - 2 * Math.PI - angleOfTolerance && bearing <= targetBearing - 2 * Math.PI + angleOfTolerance;
 }
 
 /**
@@ -163,8 +230,8 @@ function bearingWithinTolerance(bearing, targetBearing, angleOfTolerance) {
  */
 function anyTargetWithinTolerance(bearing, targets, angleOfTolerance) {
   let match = undefined;
-  targets.forEach(function(target){
-    if(bearingWithinTolerance(bearing, target._bearing, angleOfTolerance)){
+  targets.forEach(function (target) {
+    if (bearingWithinTolerance(bearing, target._bearing, angleOfTolerance)) {
       match = target;
     }
   });
