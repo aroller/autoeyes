@@ -5,7 +5,7 @@ __Autononomous Vehicle to Human Communication__
 
 ## Eye Contact 
 
-‟_Remember, if a pedestrian makes eye contact with you, they are ready to cross the street. Yield to the pedestrian.” --[California Driver Handbook](https://www.dmv.ca.gov/portal/dmv/detail/pubs/hdbk/right_of_way)
+‟_Remember, if a pedestrian makes eye contact with you, they are ready to cross the street. Yield to the pedestrian._” --[California Driver Handbook](https://www.dmv.ca.gov/portal/dmv/detail/pubs/hdbk/right_of_way)
 
 
 <img src="images/noun_driverless car_456564.png" style="float:right;"   style="float:right;" width="50px" >
