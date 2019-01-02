@@ -6,5 +6,4 @@
     Flashing lights in sequence encourages the pedestrian to continue in a direction. Green means go.
   </p>
   <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="/scenario/not-alone">&laquo; Previous</a>
-  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="/scenario/no-sneaking">Next &raquo;</a>
 </div>
