@@ -28,15 +28,17 @@ __Optional:__
    1. Negative (-) connects to black.
    1. Positive (+) connects to red.  
 1. Connect the LED 3pin JST-SM connector to the Raspberry PI GPIO connector with the jumper wires
+![Connection Photo](images/hardware-connection-photo.jpg)
    1. Use the 3 wire with a female JST-SM connector provided with the LED strip
    1. Choose a red, green and blue jumper wire from the jumper wires  
    1. Cut and strip one end of each of the jumper wires
    1. Connect each jumper wire to the corresponding color of the 3 wire JST-SM connector
-       1. Ideally solder each wire, but twist + tape will suffice
+       1. Ideally solder each wire, but twist + tape will suffice.
    1. Connect each wire to the GPIO board
        1. Red (Power) -> Pin 2
        2. Black (Ground) -> Pin 6
        3. Green (Data) -> Pin 12
+![GPIO Diagram](images/canakit-gpio-diagram.png)
 1. Plug the _female DC connector_ to the _male DC connector_ and plug power cord into the wall.
    1. Notice this powers both the LED strip and the Raspberry PI so do not use the USB power supply.
 1. Confirm the Raspberry PI is powered up and available. 
@@ -45,6 +47,7 @@ __Optional:__
 ## Software Setup 
 
 The following instructions are excerpts from a [Core Electronics tutorial](https://core-electronics.com.au/tutorials/ws2812-addressable-leds-raspberry-pi-quickstart-guide.html).
+Watch the helpful video for more information. 
 
 1. `curl -L http://coreelec.io/33 | bash` 
 2. `cd rpi_ws281x/python/examples/`
