@@ -12,13 +12,13 @@ Follow this guide to build your own real world example and see Auto Eyes work wi
 For approximately $150, you can set up this prototype, although the costs could 
 be reduced by a knowledgeable person since this parts list caters to ease of setup. 
 
-* 1 - $37 [5 meter LED Light String](https://smile.amazon.com/gp/product/B00VQ0D2TY/ref=oh_aui_detailpage_o00_s01?ie=UTF8&psc=1)
+* 1 - $37 [5 meter Medium Resolution LED Strip](https://smile.amazon.com/gp/product/B00VQ0D2TY/ref=oh_aui_detailpage_o00_s01?ie=UTF8&psc=1)
 * 1 - $26 [Power Supply](https://smile.amazon.com/gp/product/B01LXN7MN3/ref=oh_aui_detailpage_o00_s01?ie=UTF8&psc=1)
 * 1 - $80 [Raspberry PI Kit](https://smile.amazon.com/gp/product/B07BCC8PK7/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
 * 1 - $5  [Jumper Wires](https://smile.amazon.com/gp/product/B077N58HFK/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
 
 __Optional:__
-* 1 - $23 [1 meter LED Light String](https://smile.amazon.com/gp/product/B01DLYSH6U/ref=oh_aui_detailpage_o03_s01?ie=UTF8&psc=1) in addition to or instead of the 5 meter light string
+* 1 - $23 [1 meter High Resolution LED Strip](https://smile.amazon.com/gp/product/B01DLYSH6U/ref=oh_aui_detailpage_o03_s01?ie=UTF8&psc=1) in addition to or instead of the 5 meter light string
 
 ## Assemble
 
@@ -46,14 +46,40 @@ __Optional:__
 
 ## Software Setup 
 
-The following instructions are excerpts from a [Core Electronics tutorial](https://core-electronics.com.au/tutorials/ws2812-addressable-leds-raspberry-pi-quickstart-guide.html).
-Watch the helpful video for more information. 
+Demonstrate the light strip works by running a quick test in python3.
 
-1. `curl -L http://coreelec.io/33 | bash` 
-2. `cd rpi_ws281x/python/examples/`
-3. `sudo python strandtest.py`
+`python3 --version` -> `Python 3.5.3` (known to work)
 
-You should now see 10 lights on your LED Strip cycle through some color changes.
+Install PIP used to install python packages:
+
+`sudo apt-get install python3-pip`
+
+Install the light strip python3 driver:
+
+`sudo pip3 install rpi_ws281x`
+
+Download the test python
+
+`wget https://raw.githubusercontent.com/rpi-ws281x/rpi-ws281x-python/master/examples/strandtest.py`
+
+Run the test:
+
+`sudo python3 strandtest.py -c`
+
+__Expected Results:__ You should see the first 16 LEDs cycle through Red, Green, Blue and some rainbow cycles.
+
+Modify the test to illuminate all of your pixels. 
+
+`nano strandtest.py`
+
+Change the LED Count on line 13:
+
+`LED_COUNT      = 16` -> `LED_COUNT      = 144`
+
+* 1 Meter Strip = 144 (High Resolution 144/m)
+* 5 Meter Strip = 300 (Medium Resolution 60/m)
+
+Run the test again and you should see your entire strip light up.
 
 __Auto Eyes__ software setup _To Be Determined_.
 
