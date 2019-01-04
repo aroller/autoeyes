@@ -39,6 +39,7 @@ __Optional:__
        2. Black (Ground) -> Pin 6
        3. Green (Data) -> Pin 12
 ![GPIO Diagram](images/canakit-gpio-diagram.png)
+Source: [CanaKit](https://www.canakit.com/Media/CanaKit-Raspberry-Pi-Quick-Start-Guide-3.2.pdf)
 1. Plug the _female DC connector_ to the _male DC connector_ and plug power cord into the wall.
    1. Notice this powers both the LED strip and the Raspberry PI so do not use the USB power supply.
 1. Confirm the Raspberry PI is powered up and available. 
