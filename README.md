@@ -26,7 +26,7 @@ _Autoculi_ (Auto Eyes) is a simple lighting system for one-way communication fro
 
 ## Open Source 
 
-Open source and open collaboration will provide a safe and consistent solution to society for the best adoption of autonomous vehicles.
+[Open source](https://github.com/aroller/autoculi) and open collaboration will provide a safe and consistent solution to society for the best adoption of autonomous vehicles.
 
 <img src="images/noun_Mission_712151.svg" width="50px" style="float:right;"  title="Project Mission">
 ## Mission 
