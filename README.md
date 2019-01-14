@@ -19,7 +19,7 @@ Self-driving vehicles don't have a human at the wheel so pedestrians need confir
 
 ## Autos Need Eyes 
 
-<a href="https://autoeyes.org" title="Auto Eyes Website">Project Auto Eyes</a> is a simple lighting system for one-way communication from the robot to pedestrians, cyclists and other mobile humans.
+_Autoculi_ (Auto Eyes) is a simple lighting system for one-way communication from the robot to pedestrians, cyclists and other mobile humans.
 
 <img src="images/Open-source-hardware-logo.svg" width="50px" style="float:right;"  title="Open Source Software / Hardware">
 
