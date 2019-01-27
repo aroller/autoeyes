@@ -1,5 +1,5 @@
 from communicator import Communicator
-from target import Target
+from actor import Actor
 from rpi_ws281x import *
 import time
 
@@ -22,7 +22,7 @@ class LedCommunicator(Communicator):
         # Intialize the library (must be called once before other functions).
         self._strip.begin()
 
-    def acknowledge_existence(self,target:Target):
+    def acknowledge_existence(self,actor:Actor):
        colorWipe(self._strip,Color(255,0,0),10);
        colorWipe(self._strip,Color(0,0,0),10);
 

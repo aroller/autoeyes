@@ -1,19 +1,21 @@
 from actor import Actor
-from target import Target
+from communicator import Communicator
 
 
 class Vehicle:
     """Represents the autonomous vehicle communicating with actors"""
 
-    def __init__(self):
-        self._actors = {}
+    def __init__(self, communicator: Communicator):
         """The actors currently seen, keyed by actor_id."""
+        self._actors = {}
+        self._communicator = communicator
 
     def sees(self, actor: Actor):
         """To confirm that the vehicle sees the actor at the location given."""
         self._actors[actor.actor_id] = actor
+        self._communicator.acknowledge_existence(actor)
 
-    def no_longer_sees(self, actor_id:str)-> bool:
+    def no_longer_sees(self, actor_id: str) -> bool:
         """Removes the actor from the list since it is no longer seen. Returns true if it was found, otherwise false"""
         if actor_id in self.actors():
             del self.actors()[actor_id]

@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-from target import Target
+from actor import Actor
 
 
 class Communicator(metaclass=ABCMeta):
@@ -10,7 +10,7 @@ class Communicator(metaclass=ABCMeta):
     pass
 
     @abstractmethod
-    def acknowledge_existence(self,target:Target):
+    def acknowledge_existence(self,actor:Actor):
         """Inicates to an actor that the vehicle knows the actor is present.
            Like making eye contact.
            For light communicators, it may be steady lights with a non-descriptive color.

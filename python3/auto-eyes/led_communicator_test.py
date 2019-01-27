@@ -5,7 +5,7 @@ from led_communicator import LedCommunicator
 from print_communicator import PrintCommunicator
 
 
-class PrintCommunicatorTest(CommunicatorTest, unittest.TestCase):
+class LedCommunicatorTest(CommunicatorTest, unittest.TestCase):
 
     @property
     def communicator(self):
