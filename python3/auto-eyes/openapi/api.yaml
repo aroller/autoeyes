@@ -87,17 +87,16 @@ paths:
             example: "abc123"
   /actors:
     get:
-      summary: Lists current actors
+      summary: Lists actors currently seen
       description: Provides all actors currently being acknowledged.
-      operationId: api.get_actors
+      operationId: api.list_actors
       responses:
         200:
           description: All of the actors currently being acknowledged.
           content:
-            text/plain:
-              schema:
-                type: string
-                example: "Hello all"
+              application/json:
+                  schema:
+                      $ref: '#/components/schemas/Actor'
 
 components:
   schemas:

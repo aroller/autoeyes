@@ -14,14 +14,23 @@ def put_actor(actorId: str, bearing: float) -> str:
     return '{actorId} is at {bearing}.'.format(actorId=actorId, bearing=bearing)
 
 
-def get_actor(actorId: str) -> str:
-    return '{actor_id} found: {found}'.format(actor_id = actorId,found = actorId in vehicle.actors());
+def get_actor(actorId: str):
+    actors = vehicle.actors()
+    if actorId in actors:
+        return actors.get(actorId).__dict__
+    else:
+        return 'Actor with id {actor_id} not found.'.format(actor_id=actorId), 404
 
-def delete_actor(actorId: str) -> str:
+
+def delete_actor(actorId: str) -> bool:
     return vehicle.no_longer_sees(actorId)
 
-def get_actors() -> str:
-    return "{count} actors found".format(count=len(vehicle.actors()))
+
+def list_actors():
+    actors = []
+    for actor in vehicle.actors().values():
+            actors.append(actor.__dict__)
+    return actors
 
 
 if __name__ == '__main__':

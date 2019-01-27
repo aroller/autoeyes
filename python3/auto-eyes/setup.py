@@ -13,6 +13,10 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/aroller/auto-eyes",
     packages=setuptools.find_packages(),
+    install_requires=[
+        'markdown',
+        'connexion',
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
