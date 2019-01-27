@@ -15,7 +15,8 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'markdown',
-        'connexion',
+        'connexion[swagger-ui]',
+        'rpi_ws281x'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
