@@ -19,6 +19,7 @@ setuptools.setup(
         'connexion[swagger-ui]',
         'colour',
         'overrides',
+        'flask_cors',
         # 'rpi_ws281x', #  only enable in raspberry pi install
     ],
     classifiers=[

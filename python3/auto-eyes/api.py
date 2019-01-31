@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 from http import HTTPStatus
 import connexion
-import jsonpickle
+from flask_cors import CORS
 
 from actor import Actor
-from api_model import ApiModel
+from api_model import ApiModel, ApiModelSerializer
 from led_communicator import LedCommunicator
 from led_strip_controller import LedStripController
 from message_communicator import MessageCommunicator
@@ -34,12 +34,11 @@ def delete_actor(actorId: str) -> bool:
 
 
 def list_actors():
-    return ApiModel.to_json(vehicle.actors.values())
+    return ApiModelSerializer.to_json(vehicle.actors.values())
 
 
 def list_communicators():
-    return ApiModel.to_json(vehicle.communicators)
-
+    return ApiModelSerializer.to_json(vehicle.communicators)
 
 
 def vehicle_loaded(led_mode) -> Vehicle:
@@ -52,13 +51,14 @@ def vehicle_loaded(led_mode) -> Vehicle:
     else:
         controller = LedStripController(pixel_count)
 
-    return Vehicle([LedCommunicator(controller), MessageCommunicator()])
-
-
-def main():
-    app = connexion.FlaskApp(__name__, port=9090, specification_dir='openapi/')
-    app.add_api('api.yaml', arguments={'title': 'Autoculi'})
     app.run()
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':

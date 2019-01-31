@@ -69,8 +69,13 @@ function drawCar(carImage, carX, carY, scale) {
         _intentDirection: undefined,
         /**Calculates the bearing to the target from the carImage given the carX,carY*/
         bearing: function (targetX, targetY) {
-          this._bearing = targetBearing(carX, carY, targetX, targetY);
-          return this;
+        if(targetX){
+            this._bearing = targetBearing(carX, carY, targetX, targetY);
+            return this;
+        }else{
+            return this._bearing;
+        }
+
         },
         hidden: function () {
           this._bearing = undefined;
