@@ -4,7 +4,7 @@
 let carImage;
 
 const pedXOffThePage = -100;
-const canvasWidth = 300;
+const canvasWidth = window.innerWidth;
 let pedX = canvasWidth / 2;
 let pedY = 75;
 
@@ -23,7 +23,7 @@ const targetLastSent = {
  * standard processing function called once before draw is called
  */
 function setup() {
-    createCanvas(canvasWidth, 400);
+    createCanvas(canvasWidth, window.innerHeight);
     carImage = loadCarImage();
 }
 
