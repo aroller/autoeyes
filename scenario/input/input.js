@@ -4,7 +4,7 @@
 let carImage;
 
 const pedXOffThePage = -100;
-const canvasWidth = 400;
+const canvasWidth = 300;
 let pedX = canvasWidth / 2;
 let pedY = 75;
 
@@ -18,7 +18,7 @@ const targetLastSent = {
  * standard processing function called once before draw is called
  */
 function setup() {
-    createCanvas(canvasWidth, 500);
+    createCanvas(canvasWidth, 400);
     carImage = loadCarImage();
 }
 
@@ -30,12 +30,12 @@ function draw() {
     background(backgroundColor);
 
     const carX = canvasWidth / 2;
-    const carY = 250;
+    const carY = 200;
 
     drawPedestrian(pedX, pedY);
 
 
-    const car = drawCar(carImage, carX, carY, .50);
+    const car = drawCar(carImage, carX, carY, .35);
     //only show lights when ped is in view
     if (pedX < canvasWidth && pedX > 0) {
         const target = car.addTarget().bearing(pedX, pedY);
