@@ -19,7 +19,6 @@ setuptools.setup(
         'connexion[swagger-ui]',
         'colour',
         'overrides',
-        'jsonpickle',
         # 'rpi_ws281x', #  only enable in raspberry pi install
     ],
     classifiers=[

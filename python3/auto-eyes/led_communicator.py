@@ -6,9 +6,6 @@ from led_strip import LedStrip
 
 from led_strip_controller import LedStripController
 
-PIXELS_PER_ACTOR = 5
-COLOR_FOR_SEEN = Color('red')
-
 
 class LedCommunicator(Communicator):
     """
@@ -17,9 +14,14 @@ class LedCommunicator(Communicator):
     like color, brightness and any animation necessary.
     """
 
-    def __init__(self, controller: LedStripController):
+    def __init__(self, controller: LedStripController,
+                 pixels_per_actor: int = 5,
+                 color_for_seen=Color('red')):
         self._controller = controller
         self._pixel_count = controller.strip.pixel_count
+        self._pixels_per_actor = pixels_per_actor
+        self._color_for_seen = color_for_seen
+
         # map keyed by actor id keeping track of pixels
         self._actor_pixels = {}
 
@@ -35,19 +37,17 @@ class LedCommunicator(Communicator):
             print("found previous pixels {previous_pixels}".format(previous_pixels=previous_pixels))
             for i in range(len(previous_pixels)):
                 self._controller.clear_pixel(previous_pixels[i])
-        else:
-            print("{actor_id} not found in {ids}".format(actor_id=actor.actor_id, ids=self._actor_pixels.keys()))
 
         # represent the actor around the center pixel
         middle_pixel = self._pixel_at_bearing(actor.bearing)
-        additional_pixels = int(PIXELS_PER_ACTOR / 2)
+        additional_pixels = int(self._pixels_per_actor / 2)
         start_pixel = middle_pixel - additional_pixels
         end_pixel = middle_pixel + additional_pixels
         current_pixel_indexes = []
-        for i in range(start_pixel, end_pixel):
+        for i in range(start_pixel, end_pixel + 1):
             pixel_index = self._normalized_pixel_index(i)
             current_pixel_indexes.append(pixel_index)
-            self._controller.pixel_color(pixel_index, COLOR_FOR_SEEN)
+            self._controller.pixel_color(pixel_index, self._color_for_seen)
 
         # keep record of the current shown for hiding in the future
         self._actor_pixels[actor.actor_id] = current_pixel_indexes

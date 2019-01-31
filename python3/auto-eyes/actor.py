@@ -7,10 +7,10 @@ class Actor(ApiModel):
     
     """
 
-    def __init__(self, actor_id: str, _bearing: float):
+    def __init__(self, actor_id: str, bearing: float):
         self._actor_id = actor_id
         """A unique identifier, provided by the client, to uniquely identify this actor across calls."""
-        self._bearing = _bearing
+        self._bearing = bearing
         """The degrees clockwise from the forward direction of a vehicle to the location of the actor."""
 
     @property
