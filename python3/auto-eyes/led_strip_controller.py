@@ -41,10 +41,14 @@ class LedStripController:
         """
         self._future.pixel_at(index).color = color
 
-    def show(self):
-        """Commits the batch of changes queued since the previous call to show."""
-        # possibly inefficient way to manage
+    def show(self) -> LedStrip:
+        """
+        Commits the batch of changes queued since the previous call to show.
+        :return: LedStrip currently shown
+        """
+        # possibly inefficient way to manage by making copies
         self._shown = deepcopy(self._future)
+        return self._shown
 
     @property
     def strip(self)-> LedStrip:

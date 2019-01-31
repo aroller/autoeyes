@@ -2,7 +2,7 @@ import unittest
 
 from communicator_test import CommunicatorTest
 from led_communicator import LedCommunicator
-from print_communicator import PrintCommunicator
+from message_communicator import MessageCommunicator
 
 
 class LedCommunicatorTest(CommunicatorTest, unittest.TestCase):

@@ -1,112 +1,126 @@
 openapi: "3.0.0"
 
 info:
-  title: Autoculi
-  version: "1.0"
+    title: Autoculi
+    version: "1.0"
 servers:
-  - url: http://localhost:9090/v1.0
-    description: Typically used for testing during local development.
-  - url: http://av-eyes.local:9090/v1.0
-    description: A Raspberry PI server running on the local network.
+    - url: http://localhost:9090/v1.0
+      description: Typically used for testing during local development.
+    - url: http://av-eyes.local:9090/v1.0
+      description: A Raspberry PI server running on the local network.
 
 paths:
-  /actors/{actorId}:
-    get:
-      summary: Retrieves an actor's details
-      description: Provides all details known about the actor identified by id.
-      operationId: api.get_actor
-      responses:
-        200:
-          description: Actor's previously known location, if any.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Actor'
-
-        404:
-          description: The actor is not found
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "abc123 is not currently being acknowledged"
-      parameters:
-        - name: actorId
-          in: path
-          description: Unique ientifier the AV uses to track the same actor.
-          required: true
-          schema:
-            type: string
-            example: "abc123"
-    put:
-      summary: Acknowledges an actor's existence and intent
-      description: Identifies a human is outside of the vehicle at a bearing, distance and its heaading.
-      operationId: api.put_actor
-      responses:
-        200:
-          description: Actor's previously known location, if any.
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "TBD"
-      parameters:
-        - name: actorId
-          in: path
-          description: Unique ientifier the AV uses to track the same actor.
-          required: true
-          schema:
-            type: string
-            example: "abc123"
-        - name: bearing
-          in: query
-          description: The relative angle to the actor. In clockwise degrees starting from the direction the vehicle is heading,
-          required: true
-          schema:
-            type: number
-            example: "138"
-    delete:
-      summary: Vehicle no longer sees the actor
-      description: Indicates a human previously seen is now out of range.
-      operationId: api.delete_actor
-      responses:
-        200:
-          description: True if actor is currently seen, false otherwise
-          content:
-            text/plain:
-              schema:
-                type: boolean
-                example: "true"
-      parameters:
-        - name: actorId
-          in: path
-          description: Unique ientifier the AV uses to track the same actor.
-          required: true
-          schema:
-            type: string
-            example: "abc123"
-  /actors:
-    get:
-      summary: Lists actors currently seen
-      description: Provides all actors currently being acknowledged.
-      operationId: api.list_actors
-      responses:
-        200:
-          description: All of the actors currently being acknowledged.
-          content:
-              application/json:
+    /actors/{actorId}:
+        get:
+            summary: Retrieves an actor's details
+            description: Provides all details known about the actor identified by id.
+            operationId: api.get_actor
+            tags:
+                - actors
+            responses:
+                200:
+                    description: Actor's previously known location, if any.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Actor'
+                404:
+                    description: The actor is not found
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+                                example: "abc123 is not currently being acknowledged"
+            parameters:
+                - $ref: '#/components/parameters/actorIdParam'
+        put:
+            summary: Acknowledges an actor's existence and intent
+            description: Identifies a human is outside of the vehicle at a bearing, distance and its heaading.
+            operationId: api.put_actor
+            tags:
+                - actors
+            responses:
+                200:
+                    description: Actor's previously known location, if any.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Actor'
+                204:
+                    description: When the previous location of an actor is not known.
+            parameters:
+                - $ref: '#/components/parameters/actorIdParam'
+                - name: bearing
+                  in: query
+                  description: The relative angle to the actor. In clockwise degrees starting from the direction the vehicle is heading,
+                  required: true
                   schema:
-                      $ref: '#/components/schemas/Actor'
+                      type: number
+                      example: "138"
+        delete:
+            summary: Vehicle no longer sees the actor
+            description: Indicates a human previously seen is now out of range.
+            operationId: api.delete_actor
+            tags:
+                - actors
+            responses:
+                200:
+                    description: True if actor is currently seen, false otherwise
+                    content:
+                        text/plain:
+                            schema:
+                                type: boolean
+                                example: "true"
+        parameters:
+            - $ref: '#/components/parameters/actorIdParam'
+    /actors:
+        get:
+            summary: Lists actors currently seen
+            description: Provides all actors currently being acknowledged.
+            operationId: api.list_actors
+            tags:
+                - actors
+            responses:
+                200:
+                    description: All of the actors currently being acknowledged.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Actor'
+    /communicators:
+        get:
+            summary: Lists communicators
+            description: The state of all communicators communicating with actors.
+            operationId: api.list_communicators
+            tags:
+                - communicators
+            responses:
+                200:
+                    description: All of the communicators on the vehicle.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: anything
 
 components:
-  schemas:
-    Actor:
-      properties:
-        actorId:
-          type: string
-        bearing:
-          type: int
-      # Both properties are required
-      required:
-        - actorId
-        - bearing
+    schemas:
+        Actor:
+            properties:
+                actorId:
+                    type: string
+                bearing:
+                    type: int
+            # Both properties are required
+            required:
+                - actorId
+                - bearing
+    parameters:
+        actorIdParam:      # Can be referenced via '#/components/parameters/actorIdParam'
+            name: actorId
+            in: path
+            description: Unique ientifier the AV uses to track the same actor.
+            required: true
+            schema:
+                type: string
+                example: "abc123"

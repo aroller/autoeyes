@@ -1,4 +1,7 @@
-class Actor:
+from api_model import ApiModel
+
+
+class Actor(ApiModel):
     """
     Any human or humans outside of the Vehicle.  Typically pedestrians, bicyclists or other mobility users in the scene.
     
@@ -17,3 +20,9 @@ class Actor:
     @property
     def bearing(self) -> float:
         return self._bearing
+
+    def api_json(self):
+        return {
+            "actorId": self.actor_id,
+            "bearing": self.bearing
+        }

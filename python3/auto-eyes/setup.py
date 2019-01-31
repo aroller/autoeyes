@@ -18,7 +18,8 @@ setuptools.setup(
         'markdown',
         'connexion[swagger-ui]',
         'colour',
-        'overrides'
+        'overrides',
+        'jsonpickle',
         # 'rpi_ws281x', #  only enable in raspberry pi install
     ],
     classifiers=[

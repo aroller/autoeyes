@@ -12,7 +12,7 @@ LED_DMA = 10  # DMA channel to use for generating signal (try 10)
 LED_BRIGHTNESS = 255  # Set to 0 for darkest and 255 for brightest
 LED_INVERT = False  # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
-
+COLOR_FOR_OFF=colour.Color('black')
 
 class RpiWs281xLedStripController(LedStripController):
 
@@ -32,7 +32,7 @@ class RpiWs281xLedStripController(LedStripController):
     @overrides
     def clear_pixel(self, index: int):
         super().clear_pixel(index)
-        self.pixel_color(index=index, color=colour.Color('black'))
+        self.pixel_color(index=index, color=COLOR_FOR_OFF)
 
     @overrides
     def pixel_color(self, index: int, color: colour.Color):

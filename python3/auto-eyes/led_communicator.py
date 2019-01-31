@@ -2,6 +2,7 @@ from colour import Color
 
 from communicator import Communicator
 from actor import Actor
+from led_strip import LedStrip
 
 from led_strip_controller import LedStripController
 
@@ -18,11 +19,16 @@ class LedCommunicator(Communicator):
 
     def __init__(self, controller: LedStripController):
         self._controller = controller
-        self._led_count = controller.strip.pixel_count
+        self._pixel_count = controller.strip.pixel_count
         # map keyed by actor id keeping track of pixels
         self._actor_pixels = {}
 
-    def acknowledge_existence(self, actor: Actor):
+    def acknowledge_existence(self, actor: Actor) -> LedStrip:
+        """
+        `I See You` and `I'm watching you` scenario letting a human know the AV can see the actor and is watching.
+        :param actor: the target that is seen
+        :return: LedStrip currently shown
+        """
         # first clear existing pixels, then set new and show in same batch to avoid race
         if actor.actor_id in self._actor_pixels:
             previous_pixels = self._actor_pixels[actor.actor_id]
@@ -33,36 +39,42 @@ class LedCommunicator(Communicator):
             print("{actor_id} not found in {ids}".format(actor_id=actor.actor_id, ids=self._actor_pixels.keys()))
 
         # represent the actor around the center pixel
-        middle_pixel = self.pixel_at_bearing(actor.bearing)
+        middle_pixel = self._pixel_at_bearing(actor.bearing)
         additional_pixels = int(PIXELS_PER_ACTOR / 2)
         start_pixel = middle_pixel - additional_pixels
         end_pixel = middle_pixel + additional_pixels
         current_pixel_indexes = []
         for i in range(start_pixel, end_pixel):
-            pixel_index = self.normalized_pixel_index(i)
+            pixel_index = self._normalized_pixel_index(i)
             current_pixel_indexes.append(pixel_index)
             self._controller.pixel_color(pixel_index, COLOR_FOR_SEEN)
-
-        # hide the old, show the new in the same commit
-        self._controller.show()
 
         # keep record of the current shown for hiding in the future
         self._actor_pixels[actor.actor_id] = current_pixel_indexes
 
-    def normalized_pixel_index(self, index: int):
+        # hide the old, show the new in the same commit
+        return self._controller.show()
+
+    def api_json(self):
+        return {
+            "pixelCount": self._pixel_count,
+            "actorPixels": self._actor_pixels
+        }
+
+    def _normalized_pixel_index(self, index: int):
         """indexes start at 0 and go to one less than count.  if outside that range, make it fit within the range
          by adding or subtracting count to continue around the circle"""
-        if index >= self._led_count:
-            return index - self._led_count  # beyond the index of 299 for 300 count so subtract making 300-300=0
+        if index >= self._pixel_count:
+            return index - self._pixel_count  # beyond the index of 299 for 300 count so subtract making 300-300=0
         elif index < 0:
-            return index + self._led_count  # subtracts index from count so 300 count at -1 is 299 index
+            return index + self._pixel_count  # subtracts index from count so 300 count at -1 is 299 index
         else:
             return index
 
-    def pixel_at_bearing(self, bearing: float) -> int:
+    def _pixel_at_bearing(self, bearing: float) -> int:
         """Given a bearing, this will return the nearest pixel index."""
         if bearing >= 360:
             bearing = bearing - 360
         elif bearing < 0:
             bearing = bearing + 360
-        return int(self._led_count * (bearing / 360.0))
+        return int(self._pixel_count * (bearing / 360.0))

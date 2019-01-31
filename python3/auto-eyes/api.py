@@ -1,25 +1,32 @@
 #!/usr/bin/env python3
-
+from http import HTTPStatus
 import connexion
+import jsonpickle
+
 from actor import Actor
+from api_model import ApiModel
 from led_communicator import LedCommunicator
 from led_strip_controller import LedStripController
+from message_communicator import MessageCommunicator
 from vehicle import Vehicle
 from pydoc import locate
 
 
 # Note: All parameters are in the open api naming conventions, not python, to encourage a language independent API.
-def put_actor(actorId: str, bearing: float) -> str:
-    vehicle.sees(Actor(actorId, bearing))
-    return '{actorId} is at {bearing}.'.format(actorId=actorId, bearing=bearing)
+def put_actor(actorId: str, bearing: float):
+    actor = vehicle.sees(Actor(actorId, bearing))
+    if actor:
+        return actor.api_json()
+    else:
+        return None, HTTPStatus.NO_CONTENT
 
 
 def get_actor(actorId: str):
-    actors = vehicle.actors()
+    actors = vehicle.actors
     if actorId in actors:
-        return actors.get(actorId).__dict__
+        return actors[actorId].api_json()
     else:
-        return 'Actor with id {actor_id} not found.'.format(actor_id=actorId), 404
+        return 'Actor with id {actor_id} not found.'.format(actor_id=actorId), HTTPStatus.NOT_FOUND
 
 
 def delete_actor(actorId: str) -> bool:
@@ -27,14 +34,16 @@ def delete_actor(actorId: str) -> bool:
 
 
 def list_actors():
-    actors = []
-    for actor in vehicle.actors().values():
-        actors.append(actor.__dict__)
-    return actors
+    return ApiModel.to_json(vehicle.actors.values())
+
+
+def list_communicators():
+    return ApiModel.to_json(vehicle.communicators)
+
 
 
 def vehicle_loaded(led_mode) -> Vehicle:
-    pixel_count=300
+    pixel_count = 300
     if led_mode:
         # LED libraries only run on linux, not Mac so dynamically load
         controller_class_name = 'rpi_ws281x_led_strip.RpiWs281xLedStripController'
@@ -43,7 +52,7 @@ def vehicle_loaded(led_mode) -> Vehicle:
     else:
         controller = LedStripController(pixel_count)
 
-    return Vehicle(LedCommunicator(controller))
+    return Vehicle([LedCommunicator(controller), MessageCommunicator()])
 
 
 def main():

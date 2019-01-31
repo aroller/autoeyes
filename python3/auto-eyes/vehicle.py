@@ -1,3 +1,5 @@
+import typing
+
 from actor import Actor
 from communicator import Communicator
 
@@ -5,15 +7,21 @@ from communicator import Communicator
 class Vehicle:
     """Represents the autonomous vehicle communicating with actors"""
 
-    def __init__(self, communicator: Communicator):
+    def __init__(self, communicators: typing.List[Communicator]):
         """The actors currently seen, keyed by actor_id."""
         self._actors = {}
-        self._communicator = communicator
+        self._communicators = communicators
 
-    def sees(self, actor: Actor):
+    def sees(self, actor: Actor) -> Actor:
         """To confirm that the vehicle sees the actor at the location given."""
+        actor_previous = None
+        if actor.actor_id in self._actors:
+            actor_previous = self._actors[actor.actor_id]
+
         self._actors[actor.actor_id] = actor
-        self._communicator.acknowledge_existence(actor)
+        for communicator in self._communicators:
+            communicator.acknowledge_existence(actor)
+        return actor_previous
 
     def no_longer_sees(self, actor_id: str) -> bool:
         """Removes the actor from the list since it is no longer seen. Returns true if it was found, otherwise false"""
@@ -23,6 +31,11 @@ class Vehicle:
         else:
             return False
 
+    @property
     def actors(self):
         """Provides actors currently seen, keyed by the actor_id"""
         return self._actors
+
+    @property
+    def communicators(self):
+        return self._communicators
