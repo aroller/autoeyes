@@ -1,9 +1,9 @@
-### I'm Watching You
+### Run the Demo
 
 <div class="text-center">
-  <iframe src="./i-watch-you.html" style="width: 320px; height: 420px; border: 0px" align="center"></iframe>
+  <iframe src="./input.html" style="width: 320px; height: 420px; border: 0px" align="center"></iframe>
   <p class="lead">
-    The light follows the pedestrian giving comfort and education knowing the vehicle is watching. 
+    Touch the screen to move the ped.
   </p>
   <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="/scenario/i-see-you">&laquo; Previous</a>
   <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="/scenario/no-sneaking">Next &raquo;</a>
