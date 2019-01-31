@@ -11,6 +11,10 @@ let pedY = 75;
 const apiUrlLocal = 'http://localhost:9090/v1.0';
 const apiUrlAvEyesLocal = 'http://av-eyes.local:9090/v1.0';
 
+const urlParams = new URLSearchParams(window.location.search);
+let host = urlParams.get('host');
+host = host? host : 'av-eyes.local';
+const apiUrl = `http://${host}:9090/v1.0`
 const targetLastSent = {
 
 };
@@ -69,12 +73,10 @@ function send(actorId,bearinInDegrees){
     const lastSend = targetLastSent[actorId];
     if(lastSend === undefined || Math.abs(lastSend - bearinInDegrees) > 1){
         targetLastSent[actorId] = bearinInDegrees;
-        axios.put(`${apiUrlAvEyesLocal}/actors/${actorId}?bearing=${bearinInDegrees}`).then(data=>{
+        axios.put(`${apiUrl}/actors/${actorId}?bearing=${bearinInDegrees}`).then(data=>{
             console.log(data);
         },error=>{
             console.log(e);
         })
     }
-
-
 }
