@@ -13,10 +13,13 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/aroller/auto-eyes",
     packages=setuptools.find_packages(),
+    # https://pypi.org/project/{package name} for more docs
     install_requires=[
         'markdown',
         'connexion[swagger-ui]',
-        'rpi_ws281x'
+        'colour',
+        'overrides'
+        # 'rpi_ws281x', #  only enable in raspberry pi install
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -2,6 +2,8 @@
 
 import connexion
 from actor import Actor
+from led_communicator import LedCommunicator
+from led_strip_controller import LedStripController
 from vehicle import Vehicle
 from pydoc import locate
 
@@ -32,14 +34,16 @@ def list_actors():
 
 
 def vehicle_loaded(led_mode) -> Vehicle:
+    pixel_count=300
     if led_mode:
         # LED libraries only run on linux, not Mac so dynamically load
-        communicator_class_name = 'led_communicator.LedCommunicator'
-    else:
-        communicator_class_name = 'print_communicator.PrintCommunicator'
+        controller_class_name = 'rpi_ws281x_led_strip.RpiWs281xLedStripController'
+        controller = locate(controller_class_name)(pixel_count)
 
-    communicator = locate(communicator_class_name)()
-    return Vehicle(communicator)
+    else:
+        controller = LedStripController(pixel_count)
+
+    return Vehicle(LedCommunicator(controller))
 
 
 def main():

@@ -1,35 +1,68 @@
+from colour import Color
+
 from communicator import Communicator
 from actor import Actor
-from rpi_ws281x import *
-import time
 
-# LED strip configuration:
-LED_COUNT      = 300      # Number of LED pixels.
-LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
-#LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
-LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
-LED_DMA        = 10      # DMA channel to use for generating signal (try 10)
-LED_BRIGHTNESS = 255     # Set to 0 for darkest and 255 for brightest
-LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
-LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
+from led_strip_controller import LedStripController
+
+PIXELS_PER_ACTOR = 5
+COLOR_FOR_SEEN = Color('red')
+
 
 class LedCommunicator(Communicator):
+    """
+    Applies an LED Strip of pixels into an ellipse for 360 degree communication translating
+    from application terms of actors in a scene to simple light terminology for pixel details
+    like color, brightness and any animation necessary.
+    """
 
+    def __init__(self, controller: LedStripController):
+        self._controller = controller
+        self._led_count = controller.strip.pixel_count
+        # map keyed by actor id keeping track of pixels
+        self._actor_pixels = {}
 
-    def __init__(self):
-        # Create NeoPixel object with appropriate configuration.
-        self._strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
-        # Intialize the library (must be called once before other functions).
-        self._strip.begin()
+    def acknowledge_existence(self, actor: Actor):
+        # first clear existing pixels, then set new and show in same batch to avoid race
+        if actor.actor_id in self._actor_pixels:
+            previous_pixels = self._actor_pixels[actor.actor_id]
+            print("found previous pixels {previous_pixels}".format(previous_pixels=previous_pixels))
+            for i in range(len(previous_pixels)):
+                self._controller.clear_pixel(previous_pixels[i])
+        else:
+            print("{actor_id} not found in {ids}".format(actor_id=actor.actor_id, ids=self._actor_pixels.keys()))
 
-    def acknowledge_existence(self,actor:Actor):
-       colorWipe(self._strip,Color(255,0,0),10);
-       colorWipe(self._strip,Color(0,0,0),10);
+        # represent the actor around the center pixel
+        middle_pixel = self.pixel_at_bearing(actor.bearing)
+        additional_pixels = int(PIXELS_PER_ACTOR / 2)
+        start_pixel = middle_pixel - additional_pixels
+        end_pixel = middle_pixel + additional_pixels
+        current_pixel_indexes = []
+        for i in range(start_pixel, end_pixel):
+            pixel_index = self.normalized_pixel_index(i)
+            current_pixel_indexes.append(pixel_index)
+            self._controller.pixel_color(pixel_index, COLOR_FOR_SEEN)
 
+        # hide the old, show the new in the same commit
+        self._controller.show()
 
-def colorWipe(strip, color, wait_ms=50):
-    """Wipe color across display a pixel at a time."""
-    for i in range(strip.numPixels()):
-        strip.setPixelColor(i, color)
-        strip.show()
-        time.sleep(wait_ms/1000.0)
+        # keep record of the current shown for hiding in the future
+        self._actor_pixels[actor.actor_id] = current_pixel_indexes
+
+    def normalized_pixel_index(self, index: int):
+        """indexes start at 0 and go to one less than count.  if outside that range, make it fit within the range
+         by adding or subtracting count to continue around the circle"""
+        if index >= self._led_count:
+            return index - self._led_count  # beyond the index of 299 for 300 count so subtract making 300-300=0
+        elif index < 0:
+            return index + self._led_count  # subtracts index from count so 300 count at -1 is 299 index
+        else:
+            return index
+
+    def pixel_at_bearing(self, bearing: float) -> int:
+        """Given a bearing, this will return the nearest pixel index."""
+        if bearing >= 360:
+            bearing = bearing - 360
+        elif bearing < 0:
+            bearing = bearing + 360
+        return int(self._led_count * (bearing / 360.0))
