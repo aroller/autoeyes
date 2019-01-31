@@ -9,6 +9,7 @@ let pedX = canvasWidth / 2;
 let pedY = 75;
 
 const apiUrlLocal = 'http://localhost:9090/v1.0';
+const apiUrlAvEyesLocal = 'http://av-eyes.local:9090/v1.0';
 
 const targetLastSent = {
 
@@ -66,9 +67,9 @@ function touchMoved() {
 
 function send(actorId,bearinInDegrees){
     const lastSend = targetLastSent[actorId];
-    if(lastSend === undefined || Math.abs(lastSend - bearinInDegrees) > 3){
+    if(lastSend === undefined || Math.abs(lastSend - bearinInDegrees) > 1){
         targetLastSent[actorId] = bearinInDegrees;
-        axios.put(`${apiUrlLocal}/actors/${actorId}?bearing=${bearinInDegrees}`).then(data=>{
+        axios.put(`${apiUrlAvEyesLocal}/actors/${actorId}?bearing=${bearinInDegrees}`).then(data=>{
             console.log(data);
         },error=>{
             console.log(e);

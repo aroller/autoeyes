@@ -25,8 +25,8 @@ class Vehicle:
 
     def no_longer_sees(self, actor_id: str) -> bool:
         """Removes the actor from the list since it is no longer seen. Returns true if it was found, otherwise false"""
-        if actor_id in self.actors():
-            del self.actors()[actor_id]
+        if actor_id in self.actors:
+            del self.actors[actor_id]
             return True
         else:
             return False

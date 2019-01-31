@@ -51,14 +51,14 @@ def vehicle_loaded(led_mode) -> Vehicle:
     else:
         controller = LedStripController(pixel_count)
 
+    return Vehicle([LedCommunicator(controller), MessageCommunicator()])
+
+
+def main():
+    app = connexion.FlaskApp(__name__, port=9090, specification_dir='openapi/')
+    app.add_api('api.yaml', arguments={'title': 'Autoculi'})
+    CORS(app.app)
     app.run()
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
