@@ -41,7 +41,7 @@ function showUpdate(message){
 }
 function setBearing(bearing) {
     getBearingInput().value = Math.floor(bearing).toString();
-    if (bearing !== lastBearingSent && Date.now() - lastTimestampSent > 100) {
+    if (bearing !== lastBearingSent && Date.now() - lastTimestampSent > 50) {
         lastTimestampSent = Date.now();
         lastBearingSent = bearing;
         send('p', bearing);
