@@ -13,9 +13,11 @@ function initialize(){
             var alpha = event.alpha;
             var beta = event.beta;
             var gamma = event.gamma;
-            document.getElementById('alpha').innerText = alpha;
-            document.getElementById('beta').innerText = beta;
-            document.getElementById('gamma').innerText = gamma;
+            const bearing = 360-alpha;
+            document.getElementById('alpha').innerText = Math.floor(alpha).toString();
+            document.getElementById('bearing').innerText = Math.floor(bearing).toString();
+            document.getElementById('beta').innerText = Math.floor(beta).toString();
+            document.getElementById('gamma').innerText = Math.floor(gamma).toString();
         }, false);
     } else {
         capableElement.innerHtml = "False";
