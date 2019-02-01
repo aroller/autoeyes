@@ -1,7 +1,12 @@
+// the offset from the bearing to allow for taring
+let bearingOffset = 0;
+let alpha;
+let beta;
+let gamma;
+let bearing;
+let heading;
 
-
-
-function initialize(){
+function initialize() {
     const capableElement = document.getElementById('capable');
 
     if (window.DeviceOrientationEvent) {
@@ -10,11 +15,16 @@ function initialize(){
         window.addEventListener('deviceorientation', function (event) {
             console.log("orientation triggered");
             document.getElementById('updated').innerText = new Date().toISOString();
-            var alpha = event.alpha;
-            var beta = event.beta;
-            var gamma = event.gamma;
-            const bearing = 360-alpha;
+            alpha = event.alpha;
+            beta = event.beta;
+            gamma = event.gamma;
+            heading = 360 - alpha;
+            bearing = heading - bearingOffset;
+            if(bearing < 0){
+                bearing = bearing + 360;
+            }
             document.getElementById('alpha').innerText = Math.floor(alpha).toString();
+            document.getElementById('heading').innerText = Math.floor(heading).toString();
             document.getElementById('bearing').innerText = Math.floor(bearing).toString();
             document.getElementById('beta').innerText = Math.floor(beta).toString();
             document.getElementById('gamma').innerText = Math.floor(gamma).toString();
@@ -22,6 +32,10 @@ function initialize(){
     } else {
         capableElement.innerHtml = "False";
     }
+}
+
+function setCurrentHeadingToFront() {
+    bearingOffset = heading;
 }
 
 function send(actorId, bearinInDegrees) {
