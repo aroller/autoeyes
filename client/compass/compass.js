@@ -17,9 +17,8 @@ function initialize() {
     if (window.DeviceOrientationEvent) {
         getBearingInput().value = '?';
         window.addEventListener('deviceorientation', function (event) {
-            console.log("orientation triggered");
-            document.getElementById('updated').innerText = new Date().toISOString();
             const alpha = event.alpha;
+            //store heading globally since it is used for offset
             heading = 360 - alpha;
             let bearing = heading - bearingOffset;
             if (bearing < 0) {
@@ -42,11 +41,10 @@ function showUpdate(message){
 }
 function setBearing(bearing) {
     getBearingInput().value = Math.floor(bearing).toString();
-    if (bearing !== lastBearingSent && Date.now() - lastTimestampSent > 200) {
+    if (bearing !== lastBearingSent && Date.now() - lastTimestampSent > 100) {
         lastTimestampSent = Date.now();
         lastBearingSent = bearing;
         send('p', bearing);
-        showUpdate(new Date().toISOString());
     }
 }
 
@@ -59,12 +57,13 @@ function handleBearingInput(){
  */
 function setCurrentHeadingToFront() {
     bearingOffset = heading;
+    showUpdate(`Forward bearing set to heading ${heading}`)
 }
 
 function send(actorId, bearinInDegrees) {
     axios.put(`${apiUrl}/actors/${actorId}?bearing=${bearinInDegrees}`).then(data => {
-        console.log(data);
+
     }, error => {
-        console.log(e);
+       showUpdate(error);
     })
 }
