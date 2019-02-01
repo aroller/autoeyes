@@ -1,20 +1,26 @@
+//heading is stored so offset can be recorded.
+let heading;
 // the offset from the bearing to allow for taring
 let bearingOffset = 0;
+
+//minimize too many updates
 let lastBearingSent = 0;
 let lastTimestampSent = 0;
+
 const urlParams = new URLSearchParams(window.location.search);
 let host = urlParams.get('host');
 const apiUrl = `http://${host}:9090/v1.0`
 
 function initialize() {
 
+    showUpdate(host);
     if (window.DeviceOrientationEvent) {
         getBearingInput().value = '?';
         window.addEventListener('deviceorientation', function (event) {
             console.log("orientation triggered");
             document.getElementById('updated').innerText = new Date().toISOString();
             const alpha = event.alpha;
-            const heading = 360 - alpha;
+            heading = 360 - alpha;
             let bearing = heading - bearingOffset;
             if (bearing < 0) {
                 bearing = bearing + 360;
@@ -36,7 +42,7 @@ function showUpdate(message){
 }
 function setBearing(bearing) {
     getBearingInput().value = Math.floor(bearing).toString();
-    if (bearing !== lastBearingSent && Date.now() - lastTimestampSent > 500) {
+    if (bearing !== lastBearingSent && Date.now() - lastTimestampSent > 200) {
         lastTimestampSent = Date.now();
         lastBearingSent = bearing;
         send('p', bearing);
