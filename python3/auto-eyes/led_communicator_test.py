@@ -1,6 +1,7 @@
 import unittest
 
 from colour import Color
+from overrides import overrides
 
 from actor import Actor
 from communicator_test import CommunicatorTest
@@ -14,10 +15,14 @@ COLOR_FOR_ACTOR = Color('purple')
 
 
 class LedCommunicatorTest(CommunicatorTest, unittest.TestCase):
-    _communicator = LedCommunicator(LedStripController(pixel_count=PIXEL_COUNT), pixels_per_actor=PIXELS_PER_ACTOR,
-                                    color_for_seen=COLOR_FOR_ACTOR)
+
+    def __init__(self, method_name):
+        super().__init__(methodName=method_name)
+        self._communicator = LedCommunicator(LedStripController(pixel_count=PIXEL_COUNT), pixels_per_actor=PIXELS_PER_ACTOR,
+                                        color_for_seen=COLOR_FOR_ACTOR)
 
     @property
+    @overrides
     def communicator(self):
         return self._communicator
 
@@ -44,7 +49,7 @@ class LedCommunicatorTest(CommunicatorTest, unittest.TestCase):
 
     def test_pixels_for_actor_at_180(self):
         actor = Actor(actor_id='b', bearing=180)
-        strip = self.communicator.acknowledge_existence(actor)
+        strip = self.communicator.sees(actor)
         # 5 pixels per actor
         self.assertEqual(None, strip.pixel_at(177).color)
         self.assertEqual(COLOR_FOR_ACTOR, strip.pixel_at(178).color)
@@ -56,7 +61,7 @@ class LedCommunicatorTest(CommunicatorTest, unittest.TestCase):
 
     def test_pixels_for_actor_at_0(self):
         actor = Actor(actor_id='c', bearing=0)
-        strip = self.communicator.acknowledge_existence(actor)
+        strip = self.communicator.sees(actor)
         # 5 pixels per actor
         self.assertEqual(None, strip.pixel_at(357).color)
         self.assertEqual(COLOR_FOR_ACTOR, strip.pixel_at(358).color)
@@ -69,15 +74,17 @@ class LedCommunicatorTest(CommunicatorTest, unittest.TestCase):
     def test_sees_actor_pixels_set(self):
         actor_id = 'd'
         actor = Actor(actor_id=actor_id, bearing=100.0)
-        self.communicator.acknowledge_existence(actor=actor)
-        self.assertIn(actor_id,self.communicator._actor_pixels)
+        self.communicator.sees(actor=actor)
+        self.assertIn(actor_id, self.communicator._actor_pixels)
 
     def test_no_longer_sees_actor_pixels_set(self):
         actor_id = 'd'
         actor = Actor(actor_id=actor_id, bearing=100.0)
-        self.communicator.acknowledge_existence(actor=actor)
+        self.communicator.sees(actor=actor)
         self.communicator.no_longer_sees(actor_id)
-        self.assertNotIn(actor_id,self.communicator._actor_pixels)
+        self.assertNotIn(actor_id, self.communicator._actor_pixels)
         # TODO: confirm controller is called.
+
+
 if __name__ == '__main__':
     unittest.main()

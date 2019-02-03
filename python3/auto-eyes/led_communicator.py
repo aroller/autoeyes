@@ -36,7 +36,7 @@ class LedCommunicator(Communicator):
         # map keyed by actor id keeping track of pixels
         self._actor_pixels = {}
 
-    def acknowledge_existence(self, actor: Actor) -> LedStrip:
+    def sees(self, actor: Actor) -> LedStrip:
         """
         `I See You` and `I'm watching you` scenario letting a human know the AV can see the actor and is watching.
         :param actor: the target that is seen
@@ -82,7 +82,7 @@ class LedCommunicator(Communicator):
         """Light show demonstrating the wake up sequence to confirm system is up and grab attention."""
         actor_id = 'wake-up'
         for i in range(FULL_CIRCLE_DEGREES):
-            self.acknowledge_existence(Actor(actor_id=actor_id, bearing=i))
+            self.sees(Actor(actor_id=actor_id, bearing=i))
             sleep(0.01)
         sleep(1.0)
         self.no_longer_sees(actor_id)

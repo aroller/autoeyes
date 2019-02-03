@@ -11,7 +11,7 @@ class Communicator(ApiModel, metaclass=ABCMeta):
     pass
 
     @abstractmethod
-    def acknowledge_existence(self, actor: Actor):
+    def sees(self, actor: Actor):
         """Indicates to an actor that the vehicle knows the actor is present.
            Like making eye contact.
            For light communicators, it may be steady lights with a non-descriptive color.

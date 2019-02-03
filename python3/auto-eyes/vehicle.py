@@ -20,7 +20,7 @@ class Vehicle:
 
         self._actors[actor.actor_id] = actor
         for communicator in self._communicators:
-            communicator.acknowledge_existence(actor)
+            communicator.sees(actor)
         return actor_previous
 
     def no_longer_sees(self, actor_id: str) -> bool:

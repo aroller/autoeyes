@@ -14,16 +14,16 @@ class MessageCommunicator(Communicator, ApiModel):
         self._actor_messages = {}  # keyed by actor id
 
     @overrides
-    def acknowledge_existence(self, actor: Actor):
-        super().acknowledge_existence(actor)
+    def sees(self, actor: Actor):
+        super().sees(actor)
         if actor.direction is not None:
             direction_message = " to the {}".format(actor.direction.value)
         else:
             direction_message = ""
         message = "Actor {} at bearing {}° is {}{}.".format(actor.actor_id,
-                                                    actor.bearing,
-                                                    actor.action.value,
-                                                    direction_message)
+                                                            actor.bearing,
+                                                            actor.action.value,
+                                                            direction_message)
         self._actor_messages[actor.actor_id] = message
         return message
 

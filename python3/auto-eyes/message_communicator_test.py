@@ -13,7 +13,7 @@ class PrintCommunicatorTest(CommunicatorTest, unittest.TestCase):
 
     def test_acknowledge_existence_contains_properties(self):
         actor = Actor(actor_id="abc", bearing=234)
-        message = self.communicator.acknowledge_existence(actor)
+        message = self.communicator.sees(actor)
         self.assertRegex(message, actor.actor_id)
         self.assertRegex(message, str(actor.bearing))
 
