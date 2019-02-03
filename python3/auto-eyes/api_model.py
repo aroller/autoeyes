@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from collections import Iterable
+from enum import Enum
 from typing import List
 
 from connexion.operations import abstract
@@ -26,6 +27,8 @@ class ApiModelSerializer:
             return o.api_json()
         elif isinstance(o, Iterable):
             return ApiModelSerializer.list_to_json(o)
+        elif isinstance(o, Enum):
+            return o.name
         else:
             return o.__dict__
 

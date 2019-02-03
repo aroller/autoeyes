@@ -2,8 +2,9 @@
 from http import HTTPStatus
 import connexion
 from flask_cors import CORS
+from subprocess import call
 
-from actor import Actor
+from actor import Actor, Action, Direction
 from api_model import ApiModel, ApiModelSerializer
 from led_communicator import LedCommunicator
 from led_strip_controller import LedStripController
@@ -11,10 +12,23 @@ from message_communicator import MessageCommunicator
 from vehicle import Vehicle
 from pydoc import locate
 
+# change this number to match the number of led pixels on your strip
+PIXEL_COUNT = 207
+# change to true if running on a Raspberry PI with the WS2812b library installed and LED strip connected
+LED_MODE = False
+
 
 # Note: All parameters are in the open api naming conventions, not python, to encourage a language independent API.
-def put_actor(actorId: str, bearing: float):
-    actor = vehicle.sees(Actor(actorId, bearing))
+def put_actor(actorId: str,
+              bearing: float,
+              action: str = None,
+              direction: str = None):
+    if action is not None:
+        action = Action(action)
+    if direction is not None:
+        direction = Direction(direction)
+
+    actor = vehicle.sees(Actor(actorId, bearing, action, direction))
     if actor:
         return actor.api_json()
     else:
@@ -41,17 +55,27 @@ def list_communicators():
     return ApiModelSerializer.to_json(vehicle.communicators)
 
 
+def system_shutdown():
+    """Shuts down the raspberry pi gracefully.  Yes, probably a bad idea and something better provided
+        from a physical switch.
+    """
+    vehicle.clear()
+    print("********* Shut Down command given *********")
+    call("sudo shutdown -h now", shell=True)
+
+
 def vehicle_loaded(led_mode) -> Vehicle:
-    pixel_count = 300
     if led_mode:
         # LED libraries only run on linux, not Mac so dynamically load
         controller_class_name = 'rpi_ws281x_led_strip.RpiWs281xLedStripController'
-        controller = locate(controller_class_name)(pixel_count)
+        controller = locate(controller_class_name)(PIXEL_COUNT)
 
     else:
-        controller = LedStripController(pixel_count)
+        controller = LedStripController(PIXEL_COUNT)
 
-    return Vehicle([LedCommunicator(controller), MessageCommunicator()])
+    led_communicator = LedCommunicator(controller)
+    led_communicator.welcome_light_show()
+    return Vehicle([led_communicator, MessageCommunicator()])
 
 
 def main():
@@ -65,4 +89,4 @@ if __name__ == '__main__':
     main()
 
 # TODO: change this global variable into a thread safe persistent resource
-vehicle = vehicle_loaded(False)
+vehicle = vehicle_loaded(LED_MODE)

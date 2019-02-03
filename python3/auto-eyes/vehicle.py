@@ -31,6 +31,12 @@ class Vehicle:
         else:
             return False
 
+    def clear(self):
+        """Cleans up resources for all communicators and forgets all actors."""
+        self._actors = {}
+        for communicator in self._communicators:
+            communicator.clear()
+
     @property
     def actors(self):
         """Provides actors currently seen, keyed by the actor_id"""

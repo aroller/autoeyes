@@ -14,11 +14,12 @@ COLOR_FOR_ACTOR = Color('purple')
 
 
 class LedCommunicatorTest(CommunicatorTest, unittest.TestCase):
+    _communicator = LedCommunicator(LedStripController(pixel_count=PIXEL_COUNT), pixels_per_actor=PIXELS_PER_ACTOR,
+                                    color_for_seen=COLOR_FOR_ACTOR)
 
     @property
     def communicator(self):
-        return LedCommunicator(LedStripController(pixel_count=PIXEL_COUNT), pixels_per_actor=PIXELS_PER_ACTOR,
-                               color_for_seen=COLOR_FOR_ACTOR)
+        return self._communicator
 
     def test_180_degrees_is_pixel_180(self):
         self.assertEqual(self.communicator._pixel_at_bearing(180), 180)
@@ -65,6 +66,18 @@ class LedCommunicatorTest(CommunicatorTest, unittest.TestCase):
         self.assertEqual(COLOR_FOR_ACTOR, strip.pixel_at(2).color)
         self.assertEqual(None, strip.pixel_at(3).color)
 
+    def test_sees_actor_pixels_set(self):
+        actor_id = 'd'
+        actor = Actor(actor_id=actor_id, bearing=100.0)
+        self.communicator.acknowledge_existence(actor=actor)
+        self.assertIn(actor_id,self.communicator._actor_pixels)
 
+    def test_no_longer_sees_actor_pixels_set(self):
+        actor_id = 'd'
+        actor = Actor(actor_id=actor_id, bearing=100.0)
+        self.communicator.acknowledge_existence(actor=actor)
+        self.communicator.no_longer_sees(actor_id)
+        self.assertNotIn(actor_id,self.communicator._actor_pixels)
+        # TODO: confirm controller is called.
 if __name__ == '__main__':
     unittest.main()

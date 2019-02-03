@@ -50,13 +50,9 @@ paths:
                     description: When the previous location of an actor is not known.
             parameters:
                 - $ref: '#/components/parameters/actorIdParam'
-                - name: bearing
-                  in: query
-                  description: The relative angle to the actor. In clockwise degrees starting from the direction the vehicle is heading,
-                  required: true
-                  schema:
-                      type: number
-                      example: "138"
+                - $ref: '#/components/parameters/bearingParam'
+                - $ref: '#/components/parameters/actionParam'
+                - $ref: '#/components/parameters/directionParam'
         delete:
             summary: Vehicle no longer sees the actor
             description: Indicates a human previously seen is now out of range.
@@ -102,6 +98,21 @@ paths:
                             schema:
                                 type: string
                                 example: anything
+    /systems:
+        put:
+            summary: Shut down
+            description: Graceful shutdown on the Raspberry PI
+            operationId: api.system_shutdown
+            tags:
+                - system
+            responses:
+                200:
+                    description: Shutdown as begun
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                example: anything
 
 components:
     schemas:
@@ -111,12 +122,19 @@ components:
                     type: string
                 bearing:
                     type: int
+                action:
+                    type: string
+                    enum:
+                        - seen
+                        - stopped
+                        - slowing
+                        - moving
             # Both properties are required
             required:
                 - actorId
                 - bearing
     parameters:
-        actorIdParam:      # Can be referenced via '#/components/parameters/actorIdParam'
+        actorIdParam:
             name: actorId
             in: path
             description: Unique ientifier the AV uses to track the same actor.
@@ -124,3 +142,33 @@ components:
             schema:
                 type: string
                 example: "abc123"
+        bearingParam:
+            name: bearing
+            in: query
+            description: The relative angle to the actor. In clockwise degrees starting from the direction the vehicle is heading,
+            required: true
+            schema:
+              type: number
+              example: "138"
+        actionParam:
+            name: action
+            in: query
+            description: What the vehicle expects the actor to do. Limited choice enumeration.
+            required: false
+            schema:
+              type: string
+              enum:
+                  - seen
+                  - stopped
+                  - slowing
+                  - moving
+        directionParam:
+            name: direction
+            in: query
+            description: Acknowledging or encouraging an actor to move in a specfic direction, relative to the AV.  Right = clockwise, left = counterclockwise.
+            required: false
+            schema:
+              type: string
+              enum:
+                  - right
+                  - left

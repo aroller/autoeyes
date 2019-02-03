@@ -50,6 +50,11 @@ class LedStripController:
         self._shown = deepcopy(self._future)
         return self._shown
 
+    def clear(self):
+        """Clears all pixels"""
+        for i in range(self.strip.pixel_count):
+            self.clear_pixel(i)
+
     @property
     def strip(self)-> LedStrip:
         """The LED strip currently shown"""

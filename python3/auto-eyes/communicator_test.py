@@ -5,10 +5,11 @@ from actor import Actor
 from abc import ABCMeta, abstractmethod
 
 
-class CommunicatorTest(metaclass=ABCMeta):
+class CommunicatorTest(unittest.TestCase, metaclass=ABCMeta):
 
-    def test_acknowledge_existence(self):
+    def test_acknowledge_existence_does_not_fail(self):
         actor = Actor(actor_id='a', bearing=math.pi)
+        self.assertIsNotNone(self.communicator,"Your test class must provide the communicator instance")
         self.communicator.acknowledge_existence(actor=actor)
 
     @property
