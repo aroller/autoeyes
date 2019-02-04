@@ -37,6 +37,8 @@ class RpiWs281xLedStripController(LedStripController):
     @overrides
     def pixel_color(self, index: int, color: colour.Color):
         super().pixel_color(index, color)
+        if color is None:
+            color = COLOR_FOR_OFF
         ws281x_color = rpi_ws281x.Color(rgb_to_int(color.get_red()), rgb_to_int(color.get_green()), rgb_to_int(color.get_blue()))
         self._strip.setPixelColor(index, ws281x_color)
 

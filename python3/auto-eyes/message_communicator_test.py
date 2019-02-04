@@ -1,5 +1,7 @@
 import unittest
 
+from overrides import overrides
+
 from actor import Actor
 from communicator_test import CommunicatorTest
 from message_communicator import MessageCommunicator
@@ -7,7 +9,11 @@ from message_communicator import MessageCommunicator
 
 class PrintCommunicatorTest(CommunicatorTest, unittest.TestCase):
 
+    def __init__(self,method_name):
+        super().__init__(method_name=method_name)
+
     @property
+    @overrides
     def communicator(self):
         return MessageCommunicator()
 

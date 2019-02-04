@@ -1,5 +1,8 @@
+from abc import ABCMeta, abstractmethod
+
 from colour import Color
 
+from animation import HasAnimation
 from communicator import Communicator
 from actor import Actor, Action
 from led_strip import LedStrip
@@ -10,7 +13,7 @@ from led_strip_controller import LedStripController
 FULL_CIRCLE_DEGREES = 360
 
 
-class LedCommunicator(Communicator):
+class LedCommunicator(Communicator, HasAnimation):
     """
     Applies an LED Strip of pixels into an ellipse for 360 degree communication translating
     from application terms of actors in a scene to simple light terminology for pixel details
@@ -19,22 +22,14 @@ class LedCommunicator(Communicator):
 
     def __init__(self, controller: LedStripController,
                  pixels_per_actor: int = 5,
-                 color_for_seen=Color('white'),
-                 color_for_moving=Color('green'),
-                 color_for_slowing=Color('yellow'),
-                 color_for_stopped=Color('red'),
                  ):
         self._controller = controller
         self._pixel_count = controller.strip.pixel_count
         self._pixels_per_actor = pixels_per_actor
-        self._action_color = {
-            Action.SEEN: color_for_seen,
-            Action.MOVING: color_for_moving,
-            Action.SLOWING: color_for_slowing,
-            Action.STOPPED: color_for_stopped,
-        }
         # map keyed by actor id keeping track of pixels
         self._actor_pixels = {}
+        # order matters since filters are applied in ascending order
+        self._filters = [ActionColorFilter()]
 
     def sees(self, actor: Actor) -> LedStrip:
         """
@@ -57,7 +52,11 @@ class LedCommunicator(Communicator):
         for i in range(start_pixel, end_pixel + 1):
             pixel_index = self._normalized_pixel_index(i)
             current_pixel_indexes.append(pixel_index)
-            self._controller.pixel_color(pixel_index, self._action_color[actor.action])
+            color = None
+            for actor_filter in self._filters:
+                color = actor_filter.apply(actor=actor, color=color)
+
+            self._controller.pixel_color(pixel_index, color)
 
         # keep record of the current shown for hiding in the future
         self._actor_pixels[actor.actor_id] = current_pixel_indexes
@@ -87,6 +86,9 @@ class LedCommunicator(Communicator):
         sleep(1.0)
         self.no_longer_sees(actor_id)
 
+    def animate(self, time: float):
+        pass
+
     def api_json(self):
         return {
             "pixelCount": self._pixel_count,
@@ -110,3 +112,32 @@ class LedCommunicator(Communicator):
         elif bearing < 0:
             bearing = bearing + FULL_CIRCLE_DEGREES
         return int(self._pixel_count * (bearing / FULL_CIRCLE_DEGREES))
+
+
+class ActorColorFilter(metaclass=ABCMeta):
+    """Interface for changing the color based on the actor properties."""
+
+    @abstractmethod
+    def apply(self, actor: Actor, color: Color):
+        pass
+
+
+class ActionColorFilter(ActorColorFilter):
+
+    def __init__(self,
+                 color_for_seen=Color('white'),
+                 color_for_moving=Color('green'),
+                 color_for_slowing=Color('yellow'),
+                 color_for_stopped=Color('red'), ):
+        self._action_color = {
+            Action.SEEN: color_for_seen,
+            Action.MOVING: color_for_moving,
+            Action.SLOWING: color_for_slowing,
+            Action.STOPPED: color_for_stopped,
+        }
+
+    def apply(self, actor: Actor, color: Color):
+        if actor.action is not None:
+            return self._action_color[actor.action]
+        else:
+            return None
