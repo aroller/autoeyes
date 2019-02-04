@@ -75,14 +75,14 @@ class LedCommunicatorTest(CommunicatorTest, unittest.TestCase):
         actor_id = 'd'
         actor = Actor(actor_id=actor_id, bearing=100.0)
         self.communicator.sees(actor=actor)
-        self.assertIn(actor_id, self.communicator._actor_strip)
+        self.assertIn(actor_id, self.communicator._actor_pixels)
 
     def test_no_longer_sees_actor_pixels_set(self):
         actor_id = 'd'
         actor = Actor(actor_id=actor_id, bearing=100.0)
         self.communicator.sees(actor=actor)
         self.communicator.no_longer_sees(actor_id)
-        self.assertNotIn(actor_id, self.communicator._actor_strip)
+        self.assertNotIn(actor_id, self.communicator._actor_pixels)
         # TODO: confirm controller is called.
 
 
