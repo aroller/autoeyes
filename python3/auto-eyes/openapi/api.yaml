@@ -53,6 +53,7 @@ paths:
                 - $ref: '#/components/parameters/bearingParam'
                 - $ref: '#/components/parameters/actionParam'
                 - $ref: '#/components/parameters/directionParam'
+                - $ref: '#/components/parameters/urgencyParam'
         delete:
             summary: Vehicle no longer sees the actor
             description: Indicates a human previously seen is now out of range.
@@ -172,3 +173,13 @@ components:
               enum:
                   - right
                   - left
+        urgencyParam:
+            name: urgency
+            in: query
+            description: The level of importance the actor should follow a desired action.
+            required: false
+            schema:
+              type: string
+              enum:
+                  - request
+                  - demand

@@ -83,7 +83,7 @@ class LedCommunicator(Communicator):
         actor_id = 'wake-up'
         for i in range(FULL_CIRCLE_DEGREES):
             self.sees(Actor(actor_id=actor_id, bearing=i))
-            sleep(0.01)
+            sleep(0.005)
         sleep(1.0)
         self.no_longer_sees(actor_id)
 

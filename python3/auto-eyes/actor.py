@@ -21,6 +21,19 @@ class Direction(Enum):
     """Counterclockwise"""
 
 
+class Urgency(Enum):
+    """Identifies the level of importance for an actor to follow a desired action."""
+    REQUEST = "request"
+    """Acquires attention and politely asking for the requested action to be followed. 
+        Example: Asking a ped to wait to cross in a crosswalk since the AV can finish up.
+    """
+    DEMAND = "demand"
+    """Demonstrating authority that an action be followed.  Example: When a ped is jaywalking and in the AVs intent."""
+
+
+DEFAULT_ACTION = Action.SEEN
+
+
 class Actor(ApiModel):
     """
     Any human or humans outside of the Vehicle.  Typically pedestrians, bicyclists or other mobility users in the scene.
@@ -28,12 +41,17 @@ class Actor(ApiModel):
     """
 
     def __init__(self, actor_id: str, bearing: float,
-                 action: Action = Action.SEEN,
-                 direction: Direction = None):
+                 action: Action = DEFAULT_ACTION,
+                 direction: Direction = None,
+                 urgency: Urgency = None):
         self._actor_id = actor_id
         self._bearing = bearing
         self._action = action
         self._direction = direction
+        self._urgency = urgency
+
+        if self._action is None:
+            self._action = DEFAULT_ACTION
 
     @property
     def actor_id(self) -> str:
@@ -54,12 +72,18 @@ class Actor(ApiModel):
     def direction(self):
         return self._direction
 
+    @property
+    def urgency(self):
+        return self._urgency
+
     def api_json(self):
         json = {
             "actorId": self.actor_id,
             "bearing": self.bearing,
             "action": self.action.value,
         }
+        if self.urgency is not None:
+            json["urgency"] = self.urgency.value
         if self.direction is not None:
-           json["direction"] = self.direction.value
+            json["direction"] = self.direction.value
         return json

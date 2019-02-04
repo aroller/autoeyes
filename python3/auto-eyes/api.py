@@ -4,7 +4,7 @@ import connexion
 from flask_cors import CORS
 from subprocess import call
 
-from actor import Actor, Action, Direction
+from actor import Actor, Action, Direction, Urgency
 from api_model import ApiModel, ApiModelSerializer
 from led_communicator import LedCommunicator
 from led_strip_controller import LedStripController
@@ -22,13 +22,20 @@ LED_MODE = False
 def put_actor(actorId: str,
               bearing: float,
               action: str = None,
-              direction: str = None):
+              direction: str = None,
+              urgency: str = None):
     if action is not None:
         action = Action(action)
     if direction is not None:
         direction = Direction(direction)
+    if urgency is not None:
+        urgency = Urgency(urgency)
 
-    actor = vehicle.sees(Actor(actorId, bearing, action, direction))
+    actor = vehicle.sees(Actor(actor_id=actorId,
+                               bearing=bearing,
+                               action=action,
+                               direction=direction,
+                               urgency=urgency))
     if actor:
         return actor.api_json()
     else:
@@ -43,8 +50,11 @@ def get_actor(actorId: str):
         return 'Actor with id {actor_id} not found.'.format(actor_id=actorId), HTTPStatus.NOT_FOUND
 
 
-def delete_actor(actorId: str) -> bool:
-    return vehicle.no_longer_sees(actorId)
+def delete_actor(actorId: str):
+    if vehicle.no_longer_sees(actorId):
+        return True
+    else:
+        return "Actor '{actor_id}' is not found.".format(actor_id = actorId), 404
 
 
 def list_actors():

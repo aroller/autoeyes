@@ -2,7 +2,7 @@ from overrides import overrides
 
 from api_model import ApiModel
 from communicator import Communicator
-from actor import Actor
+from actor import Actor, Urgency
 
 
 class MessageCommunicator(Communicator, ApiModel):
@@ -16,14 +16,28 @@ class MessageCommunicator(Communicator, ApiModel):
     @overrides
     def sees(self, actor: Actor):
         super().sees(actor)
+
         if actor.direction is not None:
             direction_message = " to the {}".format(actor.direction.value)
         else:
             direction_message = ""
-        message = "Actor {} at bearing {}° is {}{}.".format(actor.actor_id,
-                                                            actor.bearing,
-                                                            actor.action.value,
-                                                            direction_message)
+
+        if actor.urgency is not None:
+            if actor.urgency == Urgency.REQUEST:
+                modal_verb = "should be"
+            elif actor.urgency == Urgency.DEMAND:
+                modal_verb = "must be"
+            else:
+                raise ValueError("urgency {} not handled".format(actor.urgency))
+        else:
+            modal_verb = "is"
+
+        message = "Actor `{}` at bearing {}° {} {}{}.".format(
+            actor.actor_id,
+            actor.bearing,
+            modal_verb,
+            actor.action.value,
+            direction_message)
         self._actor_messages[actor.actor_id] = message
         return message
 
