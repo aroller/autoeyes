@@ -8,10 +8,11 @@ from pixel import Pixel
 class PixelTest(unittest.TestCase):
 
     def test_clear_resets_color(self):
-        pixel = Pixel(0)
-        pixel.color = Color('red')
-        pixel.clear()
-        self.assertIsNone(pixel.color)
+        color = Color('red')
+        pixel_original = Pixel(0, color)
+        pixel_modified = pixel_original.clear()
+        self.assertIsNone(pixel_modified.color)
+        self.assertEqual(color, pixel_original.color)
 
     def test_index_is_assigned_during_construction(self):
         index = 33

@@ -1,15 +1,36 @@
 from colour import Color
 
+from api_model import ApiModel
 
-class Pixel:
-    """Represents a single light on an LED Strip. Mutable"""
+
+class Pixel(ApiModel):
+    """Represents a single light on an LED Strip. Immutable"""
 
     def __init__(self,
                  index: int,
                  color: Color = None):
-        self.index = index
-        self.color = color
+        self._index = index
+        self._color = color
+
+    @property
+    def index(self):
+        return self._index
+
+    @property
+    def color(self):
+        return self._color
 
     def clear(self):
-        """ Resets all fields, besides index, to None"""
-        self.color = None
+        """Clears all properties of the pixel keeping the index"""
+        return Pixel(index=self.index)
+
+    def with_color(self, color: Color):
+        """Creates a new pixel at the same index with color"""
+        return Pixel(index=self.index, color=color)
+
+    def api_json(self):
+        return {
+            "index": self.index,
+            "color": self.color.get_hex()
+        }
+

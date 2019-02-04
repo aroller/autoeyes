@@ -1,16 +1,19 @@
 from colour import Color
 
+from animation import HasAnimation
+from api_model import ApiModelSerializer
 from communicator import Communicator
 from actor import Actor, Action
 from led_strip import LedStrip
 from time import sleep
 
 from led_strip_controller import LedStripController
+from pixel import Pixel
 
 FULL_CIRCLE_DEGREES = 360
 
 
-class LedCommunicator(Communicator):
+class LedCommunicator(Communicator, HasAnimation):
     """
     Applies an LED Strip of pixels into an ellipse for 360 degree communication translating
     from application terms of actors in a scene to simple light terminology for pixel details
@@ -21,7 +24,7 @@ class LedCommunicator(Communicator):
                  pixels_per_actor: int = 5,
                  color_for_seen=Color('white'),
                  color_for_moving=Color('green'),
-                 color_for_slowing=Color('yellow'),
+                 color_for_slowing=Color("#ffbf00"),  # amber
                  color_for_stopped=Color('red'),
                  ):
         self._controller = controller
@@ -34,7 +37,7 @@ class LedCommunicator(Communicator):
             Action.STOPPED: color_for_stopped,
         }
         # map keyed by actor id keeping track of pixels
-        self._actor_pixels = {}
+        self._actor_strip = {}
 
     def sees(self, actor: Actor) -> LedStrip:
         """
@@ -42,37 +45,41 @@ class LedCommunicator(Communicator):
         :param actor: the target that is seen
         :return: LedStrip currently shown
         """
+
+        updated_pixels = []
         # first clear existing pixels, then set new and show in same batch to avoid race
-        if actor.actor_id in self._actor_pixels:
-            previous_pixels = self._actor_pixels[actor.actor_id]
-            for i in range(len(previous_pixels)):
-                self._controller.clear_pixel(previous_pixels[i])
+        if actor.actor_id in self._actor_strip:
+            previous_pixels = self._actor_strip[actor.actor_id].pixels
+            for pixel in previous_pixels:
+                updated_pixels.append(pixel.clear())
 
         # represent the actor around the center pixel
         middle_pixel = self._pixel_at_bearing(actor.bearing)
         additional_pixels = int(self._pixels_per_actor / 2)
         start_pixel = middle_pixel - additional_pixels
         end_pixel = middle_pixel + additional_pixels
-        current_pixel_indexes = []
+
         for i in range(start_pixel, end_pixel + 1):
             pixel_index = self._normalized_pixel_index(i)
-            current_pixel_indexes.append(pixel_index)
-            self._controller.pixel_color(pixel_index, self._action_color[actor.action])
+            action_color = self._action_color[actor.action]
+            pixel = Pixel(index=pixel_index, color=action_color)
+            updated_pixels.append(pixel)
 
         # keep record of the current shown for hiding in the future
-        self._actor_pixels[actor.actor_id] = current_pixel_indexes
+        self._actor_strip[actor.actor_id] = LedStrip(self._pixel_count).set_pixels(updated_pixels)
 
         # hide the old, show the new in the same commit
-        return self._controller.show()
+        return self._controller.show(updated_pixels)
 
     def no_longer_sees(self, actor_id: str) -> LedStrip:
         super().no_longer_sees(actor_id)
-        pixels = self._actor_pixels.pop(actor_id, None)
-        if pixels is not None:
+        strip = self._actor_strip.pop(actor_id, None)
+        cleared_pixels = []
+        if strip is not None:
             # FIXME: this will clobber another if they share pixels
-            for pixel in pixels:
-                self._controller.clear_pixel(pixel)
-        return self._controller.show()
+            for pixel in strip.pixels:
+                cleared_pixels.append(pixel.clear())
+        return self._controller.show(cleared_pixels)
 
     def clear(self):
         super().clear()
@@ -87,10 +94,13 @@ class LedCommunicator(Communicator):
         sleep(1.0)
         self.no_longer_sees(actor_id)
 
+    def animate(self, time: float):
+        pass
+
     def api_json(self):
         return {
             "pixelCount": self._pixel_count,
-            "actorPixels": self._actor_pixels
+            "actorPixels": ApiModelSerializer.to_json(self._actor_strip)
         }
 
     def _normalized_pixel_index(self, index: int):
