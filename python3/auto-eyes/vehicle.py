@@ -1,6 +1,7 @@
 import typing
 
 from actor import Actor
+from animation import HasAnimation
 from communicator import Communicator
 
 
@@ -38,6 +39,12 @@ class Vehicle:
         self._actors = {}
         for communicator in self._communicators:
             communicator.clear()
+
+    def animate(self,time:float):
+        """Calls each Communicator that is HasAnimation so they may update as necessary."""
+        for communicator in self._communicators:
+            if isinstance(communicator,HasAnimation):
+                communicator.animate(time)
 
     @property
     def actors(self):
