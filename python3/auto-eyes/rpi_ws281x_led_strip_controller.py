@@ -4,6 +4,7 @@ from rpi_ws281x import *
 import time
 
 from led_strip_controller import LedStripController
+from pixel import Pixel
 
 LED_PIN = 18  # GPIO pin connected to the pixels (18 uses PWM!).
 # LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
@@ -35,13 +36,13 @@ class RpiWs281xLedStripController(LedStripController):
         self.pixel_color(index=index, color=COLOR_FOR_OFF)
 
     @overrides
-    def pixel_color(self, index: int, color: colour.Color):
-        super().pixel_color(index, color)
+    def pixel_color(self, index: int, color: colour.Color) -> Pixel:
+        pixel = super().pixel_color(index, color)
         if color is None:
             color = COLOR_FOR_OFF
         ws281x_color = rpi_ws281x.Color(rgb_to_int(color.get_red()), rgb_to_int(color.get_green()), rgb_to_int(color.get_blue()))
         self._strip.setPixelColor(index, ws281x_color)
-
+        return pixel
 
 def rgb_to_int(rgb):
     return int(rgb * 255)

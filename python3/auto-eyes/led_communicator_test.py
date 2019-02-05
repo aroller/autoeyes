@@ -3,26 +3,24 @@ import unittest
 from colour import Color
 from overrides import overrides
 
-from actor import Actor
-from communicator_test import CommunicatorTest
-from led_communicator import LedCommunicator
+from actor import Actor, Action
+from led_communicator import LedCommunicator, ActionColorFilter
 from led_strip_controller import LedStripController
 from message_communicator import MessageCommunicator
 
 PIXEL_COUNT = 360  # easy for 1:1 ratio testing
 PIXELS_PER_ACTOR = 5
-COLOR_FOR_ACTOR = Color('purple')
+COLOR_FOR_ACTOR = ActionColorFilter().color_for_action(Action.SEEN)
 
 
-class LedCommunicatorTest(CommunicatorTest, unittest.TestCase):
+class LedCommunicatorTest(unittest.TestCase):
 
     def __init__(self, method_name):
         super().__init__(methodName=method_name)
-        self._communicator = LedCommunicator(LedStripController(pixel_count=PIXEL_COUNT), pixels_per_actor=PIXELS_PER_ACTOR,
-                                        color_for_seen=COLOR_FOR_ACTOR)
+        self._communicator = LedCommunicator(
+            LedStripController(pixel_count=PIXEL_COUNT), pixels_per_actor=PIXELS_PER_ACTOR)
 
     @property
-    @overrides
     def communicator(self):
         return self._communicator
 

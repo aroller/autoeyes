@@ -39,7 +39,9 @@ class LedStripController:
             color: Color
                 The color to be set to the pixel identified
         """
-        self._future.pixel_at(index).color = color
+        pixel = self._future.pixel_at(index)
+        pixel.color = color
+        return pixel
 
     def show(self) -> LedStrip:
         """
