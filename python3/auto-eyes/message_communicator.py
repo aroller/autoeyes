@@ -1,11 +1,10 @@
 from overrides import overrides
 
-from api_model import ApiModel
 from communicator import Communicator
 from actor import Actor, Urgency
 
 
-class MessageCommunicator(Communicator, ApiModel):
+class MessageCommunicator(Communicator):
     """Communicator that formats a message returning basic state information.
        Useful for debugging or simple demonstration.
     """
@@ -46,8 +45,3 @@ class MessageCommunicator(Communicator, ApiModel):
     def clear(self):
         super().clear()
         print("clearing all actors")
-
-    def api_json(self):
-        return {
-            "messages": "no longer stateful"
-        }

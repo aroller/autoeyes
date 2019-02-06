@@ -41,7 +41,7 @@ class Vehicle:
         """Calls each Communicator that is HasAnimation so they may update as necessary."""
         for communicator in self._communicators:
             if isinstance(communicator, HasAnimation):
-                communicator.animate(time)
+                communicator.animate(self.actors, time)
 
     @property
     def actors(self):

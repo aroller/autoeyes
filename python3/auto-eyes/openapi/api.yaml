@@ -84,21 +84,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Actor'
-    /communicators:
-        get:
-            summary: Lists communicators
-            description: The state of all communicators communicating with actors.
-            operationId: api.list_communicators
-            tags:
-                - communicators
-            responses:
-                200:
-                    description: All of the communicators on the vehicle.
-                    content:
-                        application/json:
-                            schema:
-                                type: string
-                                example: anything
     /systems:
         put:
             summary: Shut down

@@ -3,7 +3,6 @@ from abc import ABCMeta, abstractmethod
 from colour import Color
 
 from animation import HasAnimation
-from api_model import ApiModelSerializer
 from communicator import Communicator
 from actor import Actor, Action, Urgency
 from led_strip import LedStrip
@@ -66,18 +65,16 @@ class LedCommunicator(Communicator, HasAnimation):
         actor = None
         while i < FULL_CIRCLE_DEGREES:
             actor = Actor(actor_id=actor_id, bearing=i)
-            self.sees(actor=actor,previous_actor=previous_actor)
+            self.sees(actor=actor, previous_actor=previous_actor)
             previous_actor = actor
             sleep(0.005)
             i = i + 10
         sleep(1.0)
         self.no_longer_sees(actor)
 
-    def animate(self, time: float):
-        pass
-
-    def api_json(self):
-        return {"message": "No longer stateful"}
+    def animate(self, actors: dict, time: float):
+        for actor in actors.values():
+            self.sees(actor)
 
     def _pixel_indexes_for_actor(self, actor: Actor):
         pixel_indexes = []

@@ -1,10 +1,9 @@
 from abc import ABCMeta, abstractmethod
 
 from actor import Actor
-from api_model import ApiModel
 
 
-class Communicator(ApiModel, metaclass=ABCMeta):
+class Communicator(metaclass=ABCMeta):
     """
     Sends messages from the Vehicle to Actors.  The medium to send the message is defined by subclass implementations.
     """
