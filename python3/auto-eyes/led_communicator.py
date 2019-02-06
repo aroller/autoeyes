@@ -24,56 +24,34 @@ class LedCommunicator(Communicator, HasAnimation):
     def __init__(self, controller: LedStripController,
                  pixels_per_actor: int = 5):
         self._controller = controller
-        self._pixel_count = controller.strip.pixel_count
+        self._pixel_count = controller.pixel_count
         self._pixels_per_actor = pixels_per_actor
-        # map keyed by actor id keeping track of pixels
-        self._actor_pixels = {}
         # order matters since filters are applied in ascending order
         self._filters = [ActionColorFilter(), UrgencyColorFilter()]
 
-    def sees(self, actor: Actor) -> LedStrip:
-        """
-        `I See You` and `I'm watching you` scenario letting a human know the AV can see the actor and is watching.
-        :param actor: the target that is seen
-        :return: LedStrip currently shown
-        """
+    def sees(self, actor: Actor, previous_actor: Actor = None):
         # first clear existing pixels, then set new and show in same batch to avoid race
-        if actor.actor_id in self._actor_pixels:
-            previous_pixels = self._actor_pixels[actor.actor_id]
-            for pixel in previous_pixels:
-                self._controller.clear_pixel(pixel.index)
-
-        # represent the actor around the center pixel
-        middle_pixel = self._pixel_at_bearing(actor.bearing)
-        additional_pixels = int(self._pixels_per_actor / 2)
-        start_pixel = middle_pixel - additional_pixels
-        end_pixel = middle_pixel + additional_pixels
-        current_pixels = []
+        if previous_actor is not None:
+            previous_pixel_indexes = self._pixel_indexes_for_actor(previous_actor)
+            for index in previous_pixel_indexes:
+                self._controller.clear_pixel(index)
+        current_pixel_indexes = self._pixel_indexes_for_actor(actor)
         now = time()
 
-        for i in range(start_pixel, end_pixel + 1):
-            pixel_index = self._normalized_pixel_index(i)
+        for pixel_index in current_pixel_indexes:
             # each pixel may have it's own color filtered for animation (Direction, for example)
             color = None
             for actor_filter in self._filters:
                 color = actor_filter.apply(actor=actor, color=color, call_time=now)
+            self._controller.pixel_color(pixel_index, color)
+        self._controller.show()
 
-            pixel = self._controller.pixel_color(pixel_index, color)
-            current_pixels.append(pixel)
-
-        # keep record of the current shown for hiding in the future
-        self._actor_pixels[actor.actor_id] = current_pixels
-
-        # hide the old, show the new in the same commit
-        return self._controller.show()
-
-    def no_longer_sees(self, actor_id: str) -> LedStrip:
-        super().no_longer_sees(actor_id)
-        pixels = self._actor_pixels.pop(actor_id, None)
-        if pixels is not None:
+    def no_longer_sees(self, actor: Actor) -> LedStrip:
+        super().no_longer_sees(actor)
+        pixel_indexes = self._pixel_indexes_for_actor(actor)
+        for index in pixel_indexes:
             # FIXME: this will clobber another if they share pixels
-            for pixel in pixels:
-                self._controller.clear_pixel(pixel.index)
+            self._controller.clear_pixel(index)
         return self._controller.show()
 
     def clear(self):
@@ -84,21 +62,34 @@ class LedCommunicator(Communicator, HasAnimation):
         """Light show demonstrating the wake up sequence to confirm system is up and grab attention."""
         actor_id = 'wake-up'
         i = 0
+        previous_actor = None
+        actor = None
         while i < FULL_CIRCLE_DEGREES:
-            self.sees(Actor(actor_id=actor_id, bearing=i))
+            actor = Actor(actor_id=actor_id, bearing=i)
+            self.sees(actor=actor,previous_actor=previous_actor)
+            previous_actor = actor
             sleep(0.005)
-            i = i+1
+            i = i + 10
         sleep(1.0)
-        self.no_longer_sees(actor_id)
+        self.no_longer_sees(actor)
 
     def animate(self, time: float):
         pass
 
     def api_json(self):
-        return {
-            "pixelCount": self._pixel_count,
-            "actorPixels": ApiModelSerializer.to_json(self._actor_pixels)
-        }
+        return {"message": "No longer stateful"}
+
+    def _pixel_indexes_for_actor(self, actor: Actor):
+        pixel_indexes = []
+        # represent the actor around the center pixel
+        middle_pixel = self._pixel_at_bearing(actor.bearing)
+        additional_pixels = int(self._pixels_per_actor / 2)
+        start_pixel = middle_pixel - additional_pixels
+        end_pixel = middle_pixel + additional_pixels
+        for i in range(start_pixel, end_pixel + 1):
+            pixel_index = self._normalized_pixel_index(i)
+            pixel_indexes.append(pixel_index)
+        return pixel_indexes
 
     def _normalized_pixel_index(self, index: int):
         """indexes start at 0 and go to one less than count.  if outside that range, make it fit within the range

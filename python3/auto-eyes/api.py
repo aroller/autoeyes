@@ -95,7 +95,7 @@ def vehicle_loaded(led_mode) -> Vehicle:
 
     led_communicator = LedCommunicator(controller)
     led_communicator.welcome_light_show()
-    return Vehicle([led_communicator, MessageCommunicator()])
+    return Vehicle([led_communicator])
 
 
 def animator_thread_interrupt():
@@ -134,8 +134,8 @@ def main():
     app = connexion.FlaskApp(__name__, port=9090, specification_dir='openapi/')
     app.add_api('api.yaml', arguments={'title': 'Autoculi'})
     CORS(app.app)
-    animator_thread_start()
-    atexit.register(animator_thread_interrupt)
+    # animator_thread_start()
+    # atexit.register(animator_thread_interrupt)
     app.run()
 
 

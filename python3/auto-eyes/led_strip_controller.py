@@ -1,8 +1,4 @@
-from copy import deepcopy
-
 from colour import Color
-
-from led_strip import LedStrip
 
 
 class LedStripController:
@@ -23,12 +19,12 @@ class LedStripController:
     Subclasses should override to modify
     the real world strip, but must always call super method to maintain the LedStrip state.
     """
+
     def __init__(self, pixel_count: int):
-        self._shown = LedStrip(pixel_count) # current state of the led strip
-        self._future = LedStrip(pixel_count) # convenience of changing the shown + queued real time as they are applied
+        self._pixel_count = pixel_count
 
     def clear_pixel(self, index: int):
-        self._future.pixel_at(index).clear()
+        print('clearing pixel at {}'.format(index))
 
     def pixel_color(self, index: int, color: Color):
         """Assigns a color to a specific pixel
@@ -39,25 +35,21 @@ class LedStripController:
             color: Color
                 The color to be set to the pixel identified
         """
-        pixel = self._future.pixel_at(index)
-        pixel.color = color
-        return pixel
+        print("setting color at {index} to {color}".format(index=index, color=color.get_hex()))
 
-    def show(self) -> LedStrip:
+    def show(self):
         """
         Commits the batch of changes queued since the previous call to show.
         :return: LedStrip currently shown
         """
         # possibly inefficient way to manage by making copies
-        self._shown = deepcopy(self._future)
-        return self._shown
+        print("calling show")
 
     def clear(self):
         """Clears all pixels"""
-        for i in range(self.strip.pixel_count):
+        for i in range(self._pixel_count):
             self.clear_pixel(i)
 
     @property
-    def strip(self)-> LedStrip:
-        """The LED strip currently shown"""
-        return self._shown
+    def pixel_count(self):
+        return self._pixel_count

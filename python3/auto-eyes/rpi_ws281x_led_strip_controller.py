@@ -27,22 +27,19 @@ class RpiWs281xLedStripController(LedStripController):
 
     @overrides
     def show(self):
-        super().show()
         self._strip.show()
 
     @overrides
     def clear_pixel(self, index: int):
-        super().clear_pixel(index)
         self.pixel_color(index=index, color=COLOR_FOR_OFF)
 
     @overrides
-    def pixel_color(self, index: int, color: colour.Color) -> Pixel:
-        pixel = super().pixel_color(index, color)
+    def pixel_color(self, index: int, color: colour.Color):
         if color is None:
             color = COLOR_FOR_OFF
         ws281x_color = rpi_ws281x.Color(rgb_to_int(color.get_red()), rgb_to_int(color.get_green()), rgb_to_int(color.get_blue()))
         self._strip.setPixelColor(index, ws281x_color)
-        return pixel
+
 
 def rgb_to_int(rgb):
     return int(rgb * 255)

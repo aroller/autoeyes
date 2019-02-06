@@ -11,14 +11,14 @@ class Communicator(ApiModel, metaclass=ABCMeta):
     pass
 
     @abstractmethod
-    def sees(self, actor: Actor):
+    def sees(self, actor: Actor, previous_actor: Actor = None):
         """Indicates to an actor that the vehicle knows the actor is present.
            Like making eye contact.
            For light communicators, it may be steady lights with a non-descriptive color.
            """
         pass
 
-    def no_longer_sees(self, actor_id: str):
+    def no_longer_sees(self, actor: Actor):
         """The actor is out of range or interest to the vehicle and will no longer have any communication."""
         pass
 

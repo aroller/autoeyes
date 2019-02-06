@@ -10,11 +10,8 @@ class MessageCommunicator(Communicator, ApiModel):
        Useful for debugging or simple demonstration.
     """
 
-    def __init__(self):
-        self._actor_messages = {}  # keyed by actor id
-
     @overrides
-    def sees(self, actor: Actor):
+    def sees(self, actor: Actor, previous_actor: Actor = None):
         super().sees(actor)
 
         if actor.direction is not None:
@@ -32,25 +29,25 @@ class MessageCommunicator(Communicator, ApiModel):
         else:
             modal_verb = "is"
 
-        message = "Actor `{}` at bearing {}° {} {}{}.".format(
-            actor.actor_id,
-            actor.bearing,
-            modal_verb,
-            actor.action.value,
-            direction_message)
-        self._actor_messages[actor.actor_id] = message
+        message = "Actor `{actor_id}` at bearing {bearing} {modal_verb} {action}{direction}.".format(
+            actor_id=actor.actor_id,
+            bearing=actor.bearing,
+            modal_verb=modal_verb,
+            action=actor.action.value,
+            direction=direction_message)
+        print(message)
         return message
 
     @overrides
-    def no_longer_sees(self, actor_id: str):
-        super().no_longer_sees(actor_id)
-        self._actor_messages.pop(actor_id, None)
+    def no_longer_sees(self, actor: Actor):
+        super().no_longer_sees(actor)
+        print('No longer sees {}'.format(actor.actor_id))
 
     def clear(self):
         super().clear()
-        self._actor_messages = {}
+        print("clearing all actors")
 
     def api_json(self):
         return {
-            "messages": self._actor_messages
+            "messages": "no longer stateful"
         }
