@@ -46,6 +46,25 @@ class UrgencyColorFilterTest(unittest.TestCase):
         self.assertIsNone(urgency_filter.apply(actor=actor_with_urgency, color=given_color, call_time=4.0),
                           "off again at 4 seconds")
 
+    def test_request_urgency_with_4_flashes_per_second(self):
+        urgency_filter = UrgencyColorFilter(flash_per_second_for_request=4)
+        actor_with_urgency = actor(Urgency.REQUEST)
+        # start with even number at first
+        call_time = 12343332
+        self.assertIsNone(urgency_filter.apply(actor=actor_with_urgency, color=given_color, call_time=call_time + 0),
+                          "off at first")
+        self.assertIsNone(urgency_filter.apply(actor=actor_with_urgency, color=given_color, call_time=call_time + .24),
+                          "still off for almost 1/4 second")
+        self.assertEqual(given_color,
+                         urgency_filter.apply(actor=actor_with_urgency, color=given_color, call_time=call_time + 0.25),
+                         "on at 1/4 second")
+        self.assertEqual(given_color,
+                         urgency_filter.apply(actor=actor_with_urgency, color=given_color,
+                                              call_time=call_time + 0.4999),
+                         "on at almost 1/2 second")
+        self.assertIsNone(urgency_filter.apply(actor=actor_with_urgency, color=given_color, call_time=call_time + 0.5),
+                          "off again at 1/2 second")
+
     def test_request_with_real_time(self):
         duration = 1
         urgency_filter = UrgencyColorFilter(flash_per_second_for_request=duration)

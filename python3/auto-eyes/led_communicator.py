@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from math import floor
 
 from colour import Color
 
@@ -173,8 +174,6 @@ class UrgencyColorFilter(ActionColorFilter):
             Urgency.REQUEST: 1 / flash_per_second_for_request,
             Urgency.DEMAND: 1 / flash_per_second_for_demand
         }
-        # FIXME: this should be stateless
-        self._time_of_previous_flash_on = 0
 
     def seconds_til_refresh(self, actor: Actor):
         seconds = None
@@ -188,17 +187,11 @@ class UrgencyColorFilter(ActionColorFilter):
         if urgency is None:  # no urgency, no flash
             urgency_color = color
         else:
-            seconds_since_previous_on = call_time - self._time_of_previous_flash_on
             seconds_for_flash = self._seconds_per_flash_for_urgency[urgency]
 
-            if seconds_since_previous_on < seconds_for_flash:
+            if floor(call_time / seconds_for_flash) % 2 == 0:
                 urgency_color = None  # light is off
             else:
-                # 2 x flash duration -> reset to off
-                if seconds_since_previous_on >= 2 * seconds_for_flash:
-                    self._time_of_previous_flash_on = call_time
-                    urgency_color = None
-                else:
-                    urgency_color = color  # light is on
+                urgency_color = color  # light is on
 
         return urgency_color
