@@ -26,7 +26,7 @@ LED_MODE = 'AV_EYES_LED_MODE' in os.environ
 # Background processor to handle flashing and other animations for urgency, direction, etc.
 animator_thread = None
 seconds_between_animation = None
-
+animator_lock = threading.Lock()
 
 # Note: All parameters are in the open api naming conventions, not python, to encourage a language independent API.
 def put_actor(actorId: str,
@@ -122,12 +122,13 @@ def animator_call():
 
 def animate():
     global seconds_between_animation
-    seconds_between_animation = vehicle.animate(time())
-    if seconds_between_animation is not None:
-        global animator_thread
-        if animator_thread is None:
-            animator_thread = threading.Timer(seconds_between_animation, animator_call)
-            animator_thread.start()
+    with animator_lock:
+        seconds_between_animation = vehicle.animate(time())
+        if seconds_between_animation is not None:
+            global animator_thread
+            if animator_thread is None:
+                animator_thread = threading.Timer(seconds_between_animation, animator_call)
+                animator_thread.start()
 
 
 def main():
