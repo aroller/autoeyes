@@ -35,7 +35,8 @@ class LedStripController:
             color: Color
                 The color to be set to the pixel identified
         """
-        print("setting color at {index} to {color}".format(index=index, color=color.get_hex()))
+        color_value = color.get_hex() if color is not None else "off"
+        print("setting color at {index} to {color}".format(index=index, color=color_value))
 
     def show(self):
         """

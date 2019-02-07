@@ -15,14 +15,10 @@ COLOR_FOR_ACTOR = ActionColorFilter().color_for_action(Action.SEEN)
 
 class LedCommunicatorTest(unittest.TestCase):
 
-    def __init__(self, method_name):
-        super().__init__(methodName=method_name)
-        self._communicator = LedCommunicator(
-            LedStripController(pixel_count=PIXEL_COUNT), pixels_per_actor=PIXELS_PER_ACTOR)
-
     @property
     def communicator(self):
-        return self._communicator
+        return LedCommunicator(
+            LedStripController(pixel_count=PIXEL_COUNT), pixels_per_actor=PIXELS_PER_ACTOR)
 
     def test_180_degrees_is_pixel_180(self):
         self.assertEqual(self.communicator._pixel_at_bearing(180), 180)
@@ -47,40 +43,26 @@ class LedCommunicatorTest(unittest.TestCase):
 
     def test_pixels_for_actor_at_180(self):
         actor = Actor(actor_id='b', bearing=180)
-        strip = self.communicator.sees(actor)
-        # 5 pixels per actor
-        self.assertEqual(None, strip.pixel_at(177).color)
-        self.assertEqual(COLOR_FOR_ACTOR, strip.pixel_at(178).color)
-        self.assertEqual(COLOR_FOR_ACTOR, strip.pixel_at(179).color)
-        self.assertEqual(COLOR_FOR_ACTOR, strip.pixel_at(180).color)
-        self.assertEqual(COLOR_FOR_ACTOR, strip.pixel_at(181).color)
-        self.assertEqual(COLOR_FOR_ACTOR, strip.pixel_at(182).color)
-        self.assertEqual(None, strip.pixel_at(183).color)
+        indexes = self.communicator._pixel_indexes_for_actor(actor)
+        expected = [178, 179, 180, 181, 182]
+        self.assertEqual(expected, indexes)
 
     def test_pixels_for_actor_at_0(self):
         actor = Actor(actor_id='c', bearing=0)
-        strip = self.communicator.sees(actor)
-        # 5 pixels per actor
-        self.assertEqual(None, strip.pixel_at(357).color)
-        self.assertEqual(COLOR_FOR_ACTOR, strip.pixel_at(358).color)
-        self.assertEqual(COLOR_FOR_ACTOR, strip.pixel_at(359).color)
-        self.assertEqual(COLOR_FOR_ACTOR, strip.pixel_at(0).color)
-        self.assertEqual(COLOR_FOR_ACTOR, strip.pixel_at(1).color)
-        self.assertEqual(COLOR_FOR_ACTOR, strip.pixel_at(2).color)
-        self.assertEqual(None, strip.pixel_at(3).color)
+        indexes = self.communicator._pixel_indexes_for_actor(actor)
+        self.assertEqual([358, 359, 0, 1, 2], indexes)
 
     def test_sees_actor_pixels_set(self):
         actor_id = 'd'
         actor = Actor(actor_id=actor_id, bearing=100.0)
-        self.communicator.sees(actor=actor)
-        self.assertIn(actor_id, self.communicator._actor_pixels)
+        self.assertIsNone(self.communicator.sees(actor=actor))
 
     def test_no_longer_sees_actor_pixels_set(self):
         actor_id = 'd'
         actor = Actor(actor_id=actor_id, bearing=100.0)
         self.communicator.sees(actor=actor)
-        self.communicator.no_longer_sees(actor_id)
-        self.assertNotIn(actor_id, self.communicator._actor_pixels)
+        self.communicator.no_longer_sees(actor=actor)
+
         # TODO: confirm controller is called.
 
 

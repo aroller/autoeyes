@@ -3,6 +3,7 @@ import typing
 from actor import Actor
 from animation import HasAnimation
 from communicator import Communicator
+from utils import min_filtered_none
 
 
 class Vehicle:
@@ -39,9 +40,11 @@ class Vehicle:
 
     def animate(self, time: float):
         """Calls each Communicator that is HasAnimation so they may update as necessary."""
+        refresh_seconds = []
         for communicator in self._communicators:
             if isinstance(communicator, HasAnimation):
-                communicator.animate(self.actors, time)
+                refresh_seconds.append(communicator.animate(self.actors, time))
+        return min_filtered_none(refresh_seconds)
 
     @property
     def actors(self):

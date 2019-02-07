@@ -1,9 +1,12 @@
 import unittest
 import math
+from time import time
 
+from led_communicator import LedCommunicator
+from led_strip_controller import LedStripController
 from message_communicator import MessageCommunicator
 from target import Target
-from actor import Actor
+from actor import Actor, Urgency
 
 from vehicle import Vehicle
 
@@ -31,6 +34,16 @@ class VehicleTest(unittest.TestCase):
         vehicle_1.sees(actor_1)
         self.assertTrue(vehicle_1.no_longer_sees(actor_1_id), "should currently be seen")
         self.assertFalse(vehicle_1.no_longer_sees(actor_1_id), "should have been removed already")
+
+    def test_vehicle_does_not_animates_if_sees_urgency_with_unanimated_communicator(self):
+        vehicle = self.vehicle()  # only message communicator
+        vehicle.sees(Actor(actor_id=actor_1_id, bearing=20, urgency=Urgency.REQUEST))
+        self.assertIsNone(vehicle.animate(time=time()))
+
+    def test_vehicle_animates_if_sees_urgency_with_animated_communicator(self):
+        vehicle = Vehicle([LedCommunicator(LedStripController(10))])
+        vehicle.sees(Actor(actor_id=actor_1_id, bearing=20, urgency=Urgency.REQUEST))
+        self.assertIsNotNone(vehicle.animate(time=time()))
 
 
 if __name__ == '__main__':

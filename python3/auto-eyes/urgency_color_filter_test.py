@@ -4,7 +4,7 @@ from time import time
 from colour import Color
 
 from actor import Actor, Urgency
-from led_communicator import UrgencyColorFilter
+from led_communicator import UrgencyColorFilter, LedCommunicator
 
 given_color = Color('red')
 
@@ -54,8 +54,53 @@ class UrgencyColorFilterTest(unittest.TestCase):
         self.assertIsNone(urgency_filter.apply(actor=actor_with_urgency, color=given_color, call_time=call_time),
                           "off at first")
         self.assertEqual(given_color,
-                         urgency_filter.apply(actor=actor_with_urgency, color=given_color, call_time=call_time+duration),
+                         urgency_filter.apply(actor=actor_with_urgency, color=given_color,
+                                              call_time=call_time + duration),
                          "should be on")
+
+
+class UrgencyFilterRefreshTest(unittest.TestCase):
+
+    def __init__(self, method_name):
+        super().__init__(method_name)
+        self.flashes_per_second = 4.0
+        self.actor_filter = UrgencyColorFilter(flash_per_second_for_request=self.flashes_per_second)
+        self.request_urgency_refresh_seconds = 1 / self.flashes_per_second
+
+    def test_seconds_til_refresh_for_none_given(self):
+        refresh_seconds = LedCommunicator.seconds_til_refresh_for_filter(actor=actor(Urgency.REQUEST),
+                                                                         actor_filter=self.actor_filter,
+                                                                         seconds_til_refresh=None)
+        self.assertEqual(self.request_urgency_refresh_seconds, refresh_seconds)
+
+    def test_seconds_til_refresh_for_faster_given(self):
+        given_is_small = self.request_urgency_refresh_seconds / 2
+        refresh_seconds = LedCommunicator.seconds_til_refresh_for_filter(actor=actor(Urgency.REQUEST),
+                                                                         actor_filter=self.actor_filter,
+                                                                         seconds_til_refresh=given_is_small)
+        self.assertEqual(given_is_small, refresh_seconds, "the smaller refresh rate given_is_small should be chosen")
+
+    def test_seconds_til_refresh_for_slower_given(self):
+        given_is_bigger = self.request_urgency_refresh_seconds * 2
+        refresh_seconds = LedCommunicator.seconds_til_refresh_for_filter(actor=actor(Urgency.REQUEST),
+                                                                         actor_filter=self.actor_filter,
+                                                                         seconds_til_refresh=given_is_bigger)
+        self.assertEqual(self.request_urgency_refresh_seconds, refresh_seconds,
+                         "the smaller refresh rate calculated should be chosen")
+
+    def test_seconds_til_refresh_is_none_for_no_urgency(self):
+        refresh_seconds = LedCommunicator.seconds_til_refresh_for_filter(actor=actor(),
+                                                                         actor_filter=self.actor_filter,
+                                                                         seconds_til_refresh=None)
+        self.assertEqual(None, refresh_seconds)
+
+    def test_seconds_til_refresh_is_given_for_no_urgency(self):
+        given = 5
+        refresh_seconds = LedCommunicator.seconds_til_refresh_for_filter(actor=actor(),
+                                                                         actor_filter=self.actor_filter,
+                                                                         seconds_til_refresh=given)
+        self.assertEqual(given, refresh_seconds)
+
 
 def actor(urgency: Urgency = None):
     return Actor(actor_id="a", bearing=0, urgency=urgency)

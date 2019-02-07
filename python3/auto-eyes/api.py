@@ -24,8 +24,8 @@ PIXEL_COUNT = 207
 LED_MODE = 'AV_EYES_LED_MODE' in os.environ
 
 # Background processor to handle flashing and other animations for urgency, direction, etc.
-animator_thread = threading.Thread()
-ANIMATOR_CALLS_PER_SECOND = 1
+animator_thread = None
+seconds_between_animation = None
 
 
 # Note: All parameters are in the open api naming conventions, not python, to encourage a language independent API.
@@ -46,6 +46,9 @@ def put_actor(actorId: str,
                                action=action,
                                direction=direction,
                                urgency=urgency))
+    # actor is modified so there may be a need for animation
+    animate()
+
     if actor:
         return actor.api_json()
     else:
@@ -101,41 +104,36 @@ def vehicle_loaded(led_mode) -> Vehicle:
 
 def animator_thread_interrupt():
     global animator_thread
-    animator_thread.cancel()
+    if animator_thread is not None:
+        animator_thread.cancel()
 
 
 def animator_call():
-    time_last_printed = 0
-    times_called = 0
-    sleep_time = 1 / ANIMATOR_CALLS_PER_SECOND
-
-    # simple loop is chosen over multiple threading for simplicity at the cost of exact calls
-    # each animator should return as quick as possible and manage time on their own making no calls per time assumptions
-    # Threading.Timer can be used if individual threads would be better https://stackoverflow.com/questions/14384739/
-    requests.put('http://localhost:9090/v1.0/animations')
+    #  https://stackoverflow.com/questions/14384739/
     global animator_thread
-    animator_thread = threading.Timer(sleep_time, animator_call)
-    animator_thread.start()
-
-
-def animator_thread_start():
-    # Do initialisation stuff here
-    global animator_thread
-    # Create your thread
-    print("starting thread")
-    animator_thread = threading.Timer(10, animator_call)
-    animator_thread.start()
+    global seconds_between_animation
+    if seconds_between_animation is None:
+        animator_thread = None
+    else:
+        requests.put('http://localhost:9090/v1.0/animations')  # --> animate()
+        animator_thread = threading.Timer(seconds_between_animation, animator_call)
+        animator_thread.start()
 
 
 def animate():
-    vehicle.animate(time())
+    global seconds_between_animation
+    seconds_between_animation = vehicle.animate(time())
+    if seconds_between_animation is not None:
+        global animator_thread
+        if animator_thread is None:
+            animator_thread = threading.Timer(seconds_between_animation, animator_call)
+            animator_thread.start()
 
 
 def main():
     app = connexion.FlaskApp(__name__, port=9090, specification_dir='openapi/')
     app.add_api('api.yaml', arguments={'title': 'Autoculi'})
     CORS(app.app)
-    animator_thread_start()
     atexit.register(animator_thread_interrupt)
     app.run()
 
