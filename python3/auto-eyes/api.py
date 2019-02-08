@@ -28,6 +28,7 @@ animator_thread = None
 seconds_between_animation = None
 animator_lock = threading.Lock()
 
+
 # Note: All parameters are in the open api naming conventions, not python, to encourage a language independent API.
 def put_actor(actorId: str,
               bearing: float,
@@ -112,23 +113,26 @@ def animator_call():
     #  https://stackoverflow.com/questions/14384739/
     global animator_thread
     global seconds_between_animation
-    if seconds_between_animation is None:
-        animator_thread = None
-    else:
+    if seconds_between_animation is not None:
         requests.put('http://localhost:9090/v1.0/animations')  # --> animate()
-        animator_thread = threading.Timer(seconds_between_animation, animator_call)
+        animator_thread = threading.Timer(seconds_between_animation / 2, animator_call)
         animator_thread.start()
 
 
 def animate():
     global seconds_between_animation
+    global animator_thread
     with animator_lock:
         seconds_between_animation = vehicle.animate(time())
         if seconds_between_animation is not None:
-            global animator_thread
             if animator_thread is None:
+                # avoids starting multiple timer threads
                 animator_thread = threading.Timer(seconds_between_animation, animator_call)
                 animator_thread.start()
+        else:
+            if animator_thread is not None:
+                # no thread indicates one can start again in the future
+                animator_thread = None
 
 
 def main():

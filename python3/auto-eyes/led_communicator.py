@@ -42,13 +42,17 @@ class LedCommunicator(Communicator, HasAnimation):
                 self._controller.clear_pixel(index)
         current_pixel_indexes = self._pixel_indexes_for_actor(actor)
         seconds_til_refresh = None
-        for pixel_index in current_pixel_indexes:
-            # each pixel may have it's own color filtered for animation (Direction, for example)
-            color = None
-            for actor_filter in self._filters:
-                color = actor_filter.apply(actor=actor, color=color, call_time=call_time)
-                seconds_til_refresh = self.seconds_til_refresh_for_filter(actor, actor_filter, seconds_til_refresh)
 
+        # filter the colors
+        colors = [None] * len(current_pixel_indexes)
+        for actor_filter in self._filters:
+            colors = actor_filter.apply(actor=actor, colors=colors, call_time=call_time)
+            seconds_til_refresh = self.seconds_til_refresh_for_filter(actor, actor_filter, seconds_til_refresh)
+
+        for i in range(len(current_pixel_indexes)):
+            # each pixel may have it's own color filtered for animation (Direction, for example)
+            color = colors[i]
+            pixel_index = current_pixel_indexes[i]
             self._controller.pixel_color(pixel_index, color)
         self._controller.show()
         return seconds_til_refresh
@@ -135,7 +139,7 @@ class ActorColorFilter(metaclass=ABCMeta):
     """Interface for changing the color based on the actor properties."""
 
     @abstractmethod
-    def apply(self, actor: Actor, color: Color, call_time: float = None):
+    def apply(self, actor: Actor, colors, call_time: float = None):
         pass
 
 
@@ -154,21 +158,24 @@ class ActionColorFilter(ActorColorFilter):
             Action.STOPPED: color_for_stopped,
         }
 
-    def apply(self, actor: Actor, color: Color, call_time: float = None):
-        if actor.action is not None:
-            return self._action_color[actor.action]
-        else:
-            return None
+    def apply(self, actor: Actor, colors, call_time: float = None):
+        outgoing_colors = []
+        for color in colors:
+            if actor.action is not None:
+                color = self._action_color[actor.action]
+            outgoing_colors.append(color)
+        return outgoing_colors
 
     def color_for_action(self, action: Action):
         return self._action_color[action]
 
 
-class UrgencyColorFilter(ActionColorFilter):
+class UrgencyColorFilter(ActorColorFilter):
+    """Flashes LEDs to grab attention and convey urgency to follow an action"""
 
     def __init__(self,
-                 flash_per_second_for_request=4,
-                 flash_per_second_for_demand=8):
+                 flash_per_second_for_request=2,
+                 flash_per_second_for_demand=6):
         super().__init__()
         self._seconds_per_flash_for_urgency = {
             Urgency.REQUEST: 1 / flash_per_second_for_request,
@@ -181,17 +188,28 @@ class UrgencyColorFilter(ActionColorFilter):
             seconds = self._seconds_per_flash_for_urgency[actor.urgency]
         return seconds
 
-    def apply(self, actor: Actor, color: Color, call_time: float = None):
+    def apply(self, actor: Actor, colors, call_time: float = None):
         urgency = actor.urgency
-
+        outgoing_colors = []
         if urgency is None:  # no urgency, no flash
-            urgency_color = color
+            outgoing_colors = colors
         else:
             seconds_for_flash = self._seconds_per_flash_for_urgency[urgency]
 
-            if floor(call_time / seconds_for_flash) % 2 == 0:
-                urgency_color = None  # light is off
-            else:
-                urgency_color = color  # light is on
+            flash_off = floor(call_time / seconds_for_flash) % 2 == 0
+            for color in colors:
+                if flash_off:
+                    urgency_color = None  # light is off
+                else:
+                    urgency_color = color  # light is on
+                outgoing_colors.append(urgency_color)
 
-        return urgency_color
+        return outgoing_colors
+
+
+class DirectionFilter(ActorColorFilter):
+    """Flashes lights in sequence to """
+
+    def __init__(self):
+        def apply(self, actor: Actor, color: Color, call_time: float = None):
+            pass
