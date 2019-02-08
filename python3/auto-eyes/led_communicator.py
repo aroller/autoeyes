@@ -28,7 +28,9 @@ class LedCommunicator(Communicator, HasAnimation):
         self._pixel_count = controller.pixel_count
         self._pixels_per_actor = pixels_per_actor
         # order matters since filters are applied in ascending order
-        self._filters = [ActionColorFilter(), UrgencyColorFilter()]
+        urgency_filter = UrgencyColorFilter()
+        direction_filter = DirectionFilter(urgency_filter=urgency_filter, pixels_per_actor=pixels_per_actor)
+        self._filters = [ActionColorFilter(), urgency_filter, direction_filter]
 
     def sees(self, actor: Actor, previous_actor: Actor = None):
         call_time = time()
@@ -85,16 +87,32 @@ class LedCommunicator(Communicator, HasAnimation):
         """Light show demonstrating the wake up sequence to confirm system is up and grab attention."""
         actor_id = 'wake-up'
         i = 0
-        previous_actor = None
+        previous_actor1 = None
+        previous_actor2 = None
         actor = None
         while i < FULL_CIRCLE_DEGREES:
-            actor = Actor(actor_id=actor_id, bearing=i)
-            self.sees(actor=actor, previous_actor=previous_actor)
-            previous_actor = actor
+            actor1 = Actor(actor_id=actor_id, bearing=i)
+            actor2 = Actor(actor_id=actor_id, bearing=FULL_CIRCLE_DEGREES-i)
+            self.sees(actor=actor1, previous_actor=previous_actor1)
+            self.sees(actor=actor2, previous_actor=previous_actor2)
+            previous_actor1 = actor1
+            previous_actor2 = actor2
             sleep(0.005)
-            i = i + 10
+            i = i + 1
         sleep(1.0)
-        self.no_longer_sees(actor)
+        seen = Actor(actor_id='seen', bearing=30, action=Action.SEEN)
+        moving = Actor(actor_id='moving', bearing=10, action=Action.MOVING)
+        slowing = Actor(actor_id='slowing', bearing=-10, action=Action.SLOWING)
+        stopped = Actor(actor_id='stopped', bearing=-30, action=Action.STOPPED)
+        self.sees(seen)
+        self.sees(moving)
+        self.sees(slowing)
+        self.sees(stopped)
+        sleep(3.0)
+        self.no_longer_sees(actor=seen)
+        self.no_longer_sees(actor=moving)
+        self.no_longer_sees(actor=slowing)
+        self.no_longer_sees(actor=stopped)
 
     def animate(self, actors: dict, call_time: float) -> float:
         seconds_til_refresh = None
@@ -189,27 +207,67 @@ class UrgencyColorFilter(ActorColorFilter):
         return seconds
 
     def apply(self, actor: Actor, colors, call_time: float = None):
-        urgency = actor.urgency
-        outgoing_colors = []
-        if urgency is None:  # no urgency, no flash
-            outgoing_colors = colors
+        # let the direction filter indicate urgency
+        if actor.direction is not None:
+            return colors
         else:
-            seconds_for_flash = self._seconds_per_flash_for_urgency[urgency]
+            urgency = actor.urgency
+            outgoing_colors = []
+            if urgency is None:  # no urgency, no flash
+                outgoing_colors = colors
+            else:
+                seconds_for_flash = self._seconds_per_flash_for_urgency[urgency]
 
-            flash_off = floor(call_time / seconds_for_flash) % 2 == 0
-            for color in colors:
-                if flash_off:
-                    urgency_color = None  # light is off
-                else:
-                    urgency_color = color  # light is on
-                outgoing_colors.append(urgency_color)
+                flash_off = floor(call_time / seconds_for_flash) % 2 == 0
+                for color in colors:
+                    if flash_off:
+                        urgency_color = None  # light is off
+                    else:
+                        urgency_color = color  # light is on
+                    outgoing_colors.append(urgency_color)
 
-        return outgoing_colors
+            return outgoing_colors
 
 
 class DirectionFilter(ActorColorFilter):
-    """Flashes lights in sequence to """
+    """Flashes lights in sequence to indicate right (clockwise) or left (counter clockwise).
+        Urgency affects the speed.
+    """
 
-    def __init__(self):
-        def apply(self, actor: Actor, color: Color, call_time: float = None):
-            pass
+    def __init__(self, urgency_filter: UrgencyColorFilter,
+                 seconds_per_sequence_for_no_urgency=2,
+                 pixels_per_actor=5):
+        super().__init__()
+        self._urgency_filter = urgency_filter
+        self._seconds_per_sequence_for_no_urgency = seconds_per_sequence_for_no_urgency
+        self._pixels_per_actor = pixels_per_actor
+
+    def apply(self, actor: Actor, colors, call_time: float = None):
+        if actor.direction is None:
+            return colors
+        else:
+            pixel_count = len(colors)
+            seconds_for_sequence = self.seconds_for_sequence(actor)
+            pixel_count_to_light = floor(pixel_count * call_time / seconds_for_sequence) % pixel_count
+            sequence_colors = [None] * len(colors)
+            for index, color in enumerate(colors):
+                if index <= pixel_count_to_light:
+                    sequence_colors[index] = color
+                else:
+                    sequence_colors[index] = None
+        return sequence_colors
+
+    def seconds_til_refresh(self, actor: Actor):
+        # must refresh at a rate for every pixel
+        seconds_for_sequence = self.seconds_for_sequence(actor)
+        return None if seconds_for_sequence is None else seconds_for_sequence / self._pixels_per_actor
+
+    def seconds_for_sequence(self, actor):
+        if actor.direction is None:
+            return None
+        else:
+            urgency_seconds = self._urgency_filter.seconds_til_refresh(actor)
+            if urgency_seconds is None:
+                return self._seconds_per_sequence_for_no_urgency
+            else:
+                return urgency_seconds * self._pixels_per_actor / 2
