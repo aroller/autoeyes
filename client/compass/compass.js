@@ -6,6 +6,7 @@ let bearingOffset = 0;
 //minimize too many updates
 let lastBearingSent = 0;
 let lastTimestampSent = 0;
+let millisecondsBetweenSending = 100;
 
 const urlParams = new URLSearchParams(window.location.search);
 let host = urlParams.get('host');
@@ -48,8 +49,9 @@ function showUpdate(message) {
 function setBearing(givenBearing) {
     bearing = Math.floor(givenBearing).toString();
     document.getElementById('bearing').innerText = bearing;
-    if (bearing !== lastBearingSent && Date.now() - lastTimestampSent > 50) {
-        lastTimestampSent = Date.now();
+    let now = Date.now();
+    if (bearing !== lastBearingSent && now - lastTimestampSent > millisecondsBetweenSending) {
+        lastTimestampSent = now;
         lastBearingSent = bearing;
         put();
     }
