@@ -17,7 +17,7 @@ let direction;
 let urgency;
 
 function initialize() {
-    if(!host){
+    if (!host) {
         host = "10.0.0.179"
     }
     actionSelected();
@@ -51,28 +51,36 @@ function setBearing(givenBearing) {
     if (bearing !== lastBearingSent && Date.now() - lastTimestampSent > 50) {
         lastTimestampSent = Date.now();
         lastBearingSent = bearing;
-        send();
+        put();
     }
 }
 
 function actionSelected() {
     action = document.querySelector('input[name="action"]:checked').value
-    send();
+    put();
 }
 
 function directionSelected() {
     direction = document.querySelector('input[name="direction"]:checked').value
-    send();
+    put();
 }
 
 function urgencySelected() {
     urgency = document.querySelector('input[name="urgency"]:checked').value
-    send();
+    put();
 }
 
 function actorIdSelected() {
-    actorId = document.querySelector('input[name="actorId"]:checked').value
+    const selectedActorId = document.querySelector('input[name="actorId"]:checked').value;
+    console.log(`${selectedActorId} selected when already selected ${actorId}`);
+    if (selectedActorId !== actorId) {
+        console.log("sending delete");
+        sendDelete();
+    }
+    actorId = selectedActorId;
+    put();
 }
+
 
 /**
  * Tares the bearing to face the current direction so 0 degrees is facing the direction when the button is pressed.
@@ -82,23 +90,47 @@ function setCurrentHeadingToFront() {
     showUpdate(`Forward bearing set to heading ${heading}`)
 }
 
-function send() {
-    const apiUrl = `http://${host}:9090/v1.0`
-    let url = `${apiUrl}/actors/${actorId}?bearing=${bearing}`;
-    if(action){
-        url += `&action=${action}`;
-    }
-    if (direction && direction !== "none") {
-        url += `&direction=${direction}`;
-    }
-    if (urgency && urgency !== "none") {
-        url += `&urgency=${urgency}`;
-    }
-    axios.put(url).then(data => {
 
-    }, error => {
-        showUpdate(error);
-    })
+let baseUrl = function () {
+    const apiUrl = `http://${host}:9090/v1.0`;
+    const timeSeen = new Date().toISOString();
+    return `${apiUrl}/actors/${actorId}?bearing=${bearing}&timeSeen=${timeSeen}`;
+};
+
+function put() {
+    if (actorId) {
+        let url = baseUrl();
+        if (action) {
+            url += `&action=${action}`;
+        }
+        if (direction && direction !== "none") {
+            url += `&direction=${direction}`;
+        }
+        if (urgency && urgency !== "none") {
+            url += `&urgency=${urgency}`;
+        }
+        axios.put(url).then(data => {
+
+        }, error => {
+            showUpdate(error);
+        })
+    } else {
+        console.log(`No actor selected.`)
+    }
+
+}
+
+
+function sendDelete() {
+    if (actorId) {
+        axios.delete(baseUrl()).then(data => {
+
+        }, error => {
+            showUpdate(error);
+        })
+    }
+
+
 }
 
 
