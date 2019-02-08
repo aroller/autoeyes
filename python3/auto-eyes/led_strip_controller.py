@@ -5,25 +5,24 @@ class LedStripController:
     """Modifies the LED strips in batches using the mutation methods that are applied by calling show().
 
     Based on the rpi_ws281x implementation of the NeoPixel and a simple wrapper for it, but portable.
-    The controller uses a batch approach modifying all attributes as desired and then calling show to emit all changes at once.
+    The controller uses a batch approach modifying all attributes as desired and then calling show
+    to emit all changes at once.
 
-    The controller has
-     
-     
-
-     no relation to the application logic nor maintains any state beyond what can be seen by the led strip.
-
-    The state can be seen in the LedStrip objects maintained by this class queued and shown.  The show method moves
-    pending changes from queued to shown.
+    The controller has no relation to the application logic
+    nor maintains any state beyond what can be seen by the led strip.
 
     Subclasses should override to modify
-    the real world strip, but must always call super method to maintain the LedStrip state.
+    the real world strip, but may call super method to print out state if desired.
+
+    This default implementation allows testing and demonstration on dev enviroments where the raspberry pi led strip
+    will not operate.
     """
 
     def __init__(self, pixel_count: int):
         self._pixel_count = pixel_count
 
     def clear_pixel(self, index: int):
+        """Turn off the pixel"""
         print('clearing pixel at {}'.format(index))
 
     def pixel_color(self, index: int, color: Color):
@@ -41,9 +40,7 @@ class LedStripController:
     def show(self):
         """
         Commits the batch of changes queued since the previous call to show.
-        :return: LedStrip currently shown
         """
-        # possibly inefficient way to manage by making copies
         print("calling show")
 
     def clear(self):

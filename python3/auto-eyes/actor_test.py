@@ -1,15 +1,17 @@
 import unittest
+
 from actor import Actor, Direction
+
+actor_id = "test"
+bearing = 170.1
+actor = Actor(actor_id, bearing)
 
 
 class ActorTest(unittest.TestCase):
 
     def test_actor_id_assigned_during_construction(self):
-        id = "test"
-        bearing = 170.1
-        actor = Actor(id, bearing)
-        self.assertEqual(id, actor.actor_id);
-        self.assertEqual(bearing, actor.bearing);
+        self.assertEqual(actor_id, actor.actor_id)
+        self.assertEqual(bearing, actor.bearing)
 
     def test_right_value_builds_right_enum(self):
         self.assertEqual("right", Direction.RIGHT.value)

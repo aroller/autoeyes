@@ -5,7 +5,6 @@ from time import time
 from led_communicator import LedCommunicator
 from led_strip_controller import LedStripController
 from message_communicator import MessageCommunicator
-from target import Target
 from actor import Actor, Urgency
 
 from vehicle import Vehicle
@@ -21,7 +20,8 @@ class VehicleTest(unittest.TestCase):
         vehicle_1.sees(actor_1)
         self.assertEqual(vehicle_1.actors[actor_1.actor_id], actor_1)
 
-    def vehicle(self):
+    @staticmethod
+    def vehicle():
         return Vehicle([MessageCommunicator()])
 
     def test_doesnt_see_actor(self):
@@ -44,6 +44,22 @@ class VehicleTest(unittest.TestCase):
         vehicle = Vehicle([LedCommunicator(LedStripController(10))])
         vehicle.sees(Actor(actor_id=actor_1_id, bearing=20, urgency=Urgency.REQUEST))
         self.assertIsNotNone(vehicle.animate(time=time()))
+
+    def test_previous_returned_when_seen_again(self):
+        vehicle = self.vehicle()
+        self.assertIsNone(vehicle.sees(actor_1))
+        self.assertIsNotNone(vehicle.sees(actor_1))
+
+    def test_current_is_before_previous_raises_error(self):
+        vehicle = self.vehicle()
+        before = "2019-02-08T15:04:14.593Z"
+        after = "2019-02-08T15:04:15.593Z"
+        actor_before = Actor(actor_id=actor_1_id, bearing=0, time_seen=before)
+        actor_after = Actor(actor_id=actor_1_id, bearing=0, time_seen=after)
+
+        self.assertIsNone(vehicle.sees(actor_before))
+        self.assertIsNotNone(vehicle.sees(actor_after))
+        self.assertRaises(ValueError, vehicle.sees, actor_before)
 
 
 if __name__ == '__main__':

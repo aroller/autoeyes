@@ -1,10 +1,12 @@
-from api_model import ApiModel
 from enum import Enum
+
+from api_model import ApiModel
 
 
 class Action(Enum):
+    """What the vehicle expects or desires the actor to do."""
     SEEN = "seen"
-    """Existence is acknowledge, but intent is not determined nor recommended."""
+    """Existence is acknowledged, but intent is not determined nor recommended."""
     MOVING = "moving"
     """Acknowledge that the actor is not stationary and has an intent and the AV agrees the actor can move."""
     SLOWING = "slowing"
@@ -14,7 +16,8 @@ class Action(Enum):
 
 
 class Direction(Enum):
-    """Used to acknowledge or encourage an actor to move in a specific direction, relative to the vehicle."""
+    """Used to acknowledge or encourage an actor to move in a specific direction,
+    from the perspective of the vehicle."""
     RIGHT = "right"
     """Clockwise"""
     LEFT = "left"
@@ -43,12 +46,14 @@ class Actor(ApiModel):
     def __init__(self, actor_id: str, bearing: float,
                  action: Action = DEFAULT_ACTION,
                  direction: Direction = None,
-                 urgency: Urgency = None):
+                 urgency: Urgency = None,
+                 time_seen: str = None):
         self._actor_id = actor_id
         self._bearing = bearing
         self._action = action
         self._direction = direction
         self._urgency = urgency
+        self._time_seen = time_seen
 
         if self._action is None:
             self._action = DEFAULT_ACTION
@@ -76,6 +81,12 @@ class Actor(ApiModel):
     def urgency(self):
         return self._urgency
 
+    @property
+    def time_seen(self) -> str:
+        """The time the actor was seen, in iso format.  Provided by the client, this helps with ensuring aynch calls
+        are being handled in the proper order."""
+        return self._time_seen
+
     def api_json(self):
         json = {
             "actorId": self.actor_id,
@@ -86,4 +97,6 @@ class Actor(ApiModel):
             json["urgency"] = self.urgency.value
         if self.direction is not None:
             json["direction"] = self.direction.value
+        if self.time_seen is not None:
+            json["timeSeen"] = self._time_seen
         return json

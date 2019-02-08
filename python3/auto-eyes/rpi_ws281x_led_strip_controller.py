@@ -4,7 +4,6 @@ from rpi_ws281x import *
 import time
 
 from led_strip_controller import LedStripController
-from pixel import Pixel
 
 LED_PIN = 18  # GPIO pin connected to the pixels (18 uses PWM!).
 # LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).

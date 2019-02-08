@@ -10,13 +10,19 @@ class Vehicle:
     """Represents the autonomous vehicle communicating with actors"""
 
     def __init__(self, communicators: typing.List[Communicator]):
-        """The actors currently seen, keyed by actor_id."""
         self._actors = {}
         self._communicators = communicators
 
     def sees(self, actor: Actor) -> Actor:
-        """To confirm that the vehicle sees the actor at the location given."""
+        """To confirm that the vehicle sees the actor at the location given.
+        :returns previous actor, if any
+        :raises ValueError when out of sync (the given actor is seen before the previous).
+        """
         actor_previous = self.actors.pop(actor.actor_id, None)
+        if actor_previous is not None and actor_previous.time_seen is not None and actor.time_seen is not None:
+            if actor_previous.time_seen > actor.time_seen:
+                raise ValueError("Out of sync.  Previous time {previous} is after the current {current}".format(
+                    previous=actor_previous.time_seen, current=actor.time_seen))
         self._actors[actor.actor_id] = actor
         for communicator in self._communicators:
             communicator.sees(actor=actor, previous_actor=actor_previous)

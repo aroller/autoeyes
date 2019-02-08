@@ -48,12 +48,15 @@ paths:
                                 $ref: '#/components/schemas/Actor'
                 204:
                     description: When the previous location of an actor is not known.
+                409:
+                    description: When out of sync (the given actor is seen before the previous).
             parameters:
                 - $ref: '#/components/parameters/actorIdParam'
                 - $ref: '#/components/parameters/bearingParam'
                 - $ref: '#/components/parameters/actionParam'
                 - $ref: '#/components/parameters/directionParam'
                 - $ref: '#/components/parameters/urgencyParam'
+                - $ref: '#/components/parameters/timeSeenParam'
         delete:
             summary: Vehicle no longer sees the actor
             description: Indicates a human previously seen is now out of range.
@@ -61,8 +64,10 @@ paths:
             tags:
                 - actors
             responses:
-                200:
-                    description: True if actor is currently seen, false otherwise
+                204:
+                    description: Simple response indicating deletion was successful.
+                404:
+                    description: Indicates the actor is not found
                     content:
                         text/plain:
                             schema:
@@ -122,7 +127,7 @@ components:
                 actorId:
                     type: string
                 bearing:
-                    type: int
+                    type: integer
                 action:
                     type: string
                     enum:
@@ -130,6 +135,19 @@ components:
                         - stopped
                         - slowing
                         - moving
+                urgency:
+                    type: string
+                    enum:
+                        - request
+                        - demand
+                direction:
+                    type: string
+                    enum:
+                        - right
+                        - left
+                timeSeen:
+                    type: string
+                    format: date-time
             # Both properties are required
             required:
                 - actorId
@@ -149,37 +167,46 @@ components:
             description: The relative angle to the actor. In clockwise degrees starting from the direction the vehicle is heading,
             required: true
             schema:
-              type: number
-              example: "138"
+                type: number
+                example: "138"
         actionParam:
             name: action
             in: query
             description: What the vehicle expects the actor to do. Limited choice enumeration.
             required: false
             schema:
-              type: string
-              enum:
-                  - seen
-                  - stopped
-                  - slowing
-                  - moving
+                type: string
+                enum:
+                    - seen
+                    - stopped
+                    - slowing
+                    - moving
         directionParam:
             name: direction
             in: query
             description: Acknowledging or encouraging an actor to move in a specfic direction, relative to the AV.  Right = clockwise, left = counterclockwise.
             required: false
             schema:
-              type: string
-              enum:
-                  - right
-                  - left
+                type: string
+                enum:
+                    - right
+                    - left
         urgencyParam:
             name: urgency
             in: query
             description: The level of importance the actor should follow a desired action.
             required: false
             schema:
-              type: string
-              enum:
-                  - request
-                  - demand
+                type: string
+                enum:
+                    - request
+                    - demand
+        timeSeenParam:
+            name: timeSeen
+            in: query
+            description: The time the client observation was made in iso date time format.
+            required: false
+            schema:
+                type: string
+                format: date-time
+                example: "2017-07-21T17:32:28Z"

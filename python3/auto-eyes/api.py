@@ -5,17 +5,16 @@ import threading
 from http import HTTPStatus
 from pydoc import locate
 from subprocess import call
-from time import time, sleep
-import requests
+from time import time
 
 import connexion
+import requests
 from flask_cors import CORS
 
 from actor import Actor, Action, Direction, Urgency
 from api_model import ApiModelSerializer
 from led_communicator import LedCommunicator
 from led_strip_controller import LedStripController
-from message_communicator import MessageCommunicator
 from vehicle import Vehicle
 
 # change this number to match the number of led pixels on your strip
@@ -34,7 +33,9 @@ def put_actor(actorId: str,
               bearing: float,
               action: str = None,
               direction: str = None,
-              urgency: str = None):
+              urgency: str = None,
+              timeSeen: str = None):
+    """Sets the state of the actor and updates the list in the vehicle."""
     if action is not None:
         action = Action(action)
     if direction is not None:
@@ -42,11 +43,15 @@ def put_actor(actorId: str,
     if urgency is not None:
         urgency = Urgency(urgency)
 
-    actor = vehicle.sees(Actor(actor_id=actorId,
-                               bearing=bearing,
-                               action=action,
-                               direction=direction,
-                               urgency=urgency))
+    try:
+        actor = vehicle.sees(Actor(actor_id=actorId,
+                                   bearing=bearing,
+                                   action=action,
+                                   direction=direction,
+                                   urgency=urgency,
+                                   time_seen=timeSeen))
+    except ValueError as e:
+        return str(e), HTTPStatus.CONFLICT
     # actor is modified so there may be a need for animation
     animate()
 
@@ -57,6 +62,7 @@ def put_actor(actorId: str,
 
 
 def get_actor(actorId: str):
+    """Shows the state of any actor, if it exists."""
     actors = vehicle.actors
     if actorId in actors:
         return actors[actorId].api_json()
@@ -65,18 +71,16 @@ def get_actor(actorId: str):
 
 
 def delete_actor(actorId: str):
+    """Removes the actor from the sight of vehicle. """
     if vehicle.no_longer_sees(actorId):
-        return True
+        return HTTPStatus.NO_CONTENT
     else:
-        return "Actor '{actor_id}' is not found.".format(actor_id=actorId), 404
+        return "Actor '{actor_id}' is not found.".format(actor_id=actorId), HTTPStatus.NOT_FOUND
 
 
 def list_actors():
+    """"Provides all actors the vehicle currently sees."""
     return ApiModelSerializer.to_json(vehicle.actors.values())
-
-
-def list_communicators():
-    return ApiModelSerializer.to_json(vehicle.communicators)
 
 
 def system_shutdown():
@@ -88,7 +92,10 @@ def system_shutdown():
     call("sudo shutdown -h now", shell=True)
 
 
-def vehicle_loaded(led_mode) -> Vehicle:
+def vehicle_loaded(led_mode: bool) -> Vehicle:
+    """Creates the vehicle with the communicators loaded.  Based on the parameter, the led controller will
+    load with the raspberry pi ws281x controller. This is necessary since the raspberry pi code will cause
+    all executions to fail when testing on dev environments."""
     if led_mode:
         # LED libraries only run on linux, not Mac so dynamically load
         controller_class_name = 'rpi_ws281x_led_strip_controller.RpiWs281xLedStripController'
@@ -104,12 +111,14 @@ def vehicle_loaded(led_mode) -> Vehicle:
 
 
 def animator_thread_interrupt():
+    """Stops the current thread, if any, when the program is stopped"""
     global animator_thread
     if animator_thread is not None:
         animator_thread.cancel()
 
 
 def animator_call():
+    """Simply makes a local REST call to animate and queues up a repeat call using a timer thread"""
     #  https://stackoverflow.com/questions/14384739/
     global animator_thread
     global seconds_between_animation
@@ -120,6 +129,9 @@ def animator_call():
 
 
 def animate():
+    """refreshes the scene to reflect all actors and to toggle pixels based on their urgency or direction.
+        FIXME: This should be at the LED Communicator level and not require http calls
+    """
     global seconds_between_animation
     global animator_thread
     with animator_lock:

@@ -1,14 +1,12 @@
 from abc import ABCMeta, abstractmethod
 from math import floor
+from time import sleep, time
 
 from colour import Color
 
+from actor import Actor, Action, Urgency, Direction
 from animation import HasAnimation
 from communicator import Communicator
-from actor import Actor, Action, Urgency, Direction
-from led_strip import LedStrip
-from time import sleep, time
-
 from led_strip_controller import LedStripController
 from utils import min_filtered_none
 
@@ -36,7 +34,10 @@ class LedCommunicator(Communicator, HasAnimation):
         call_time = time()
         return self._show_actor(actor=actor, previous_actor=previous_actor, call_time=call_time)
 
-    def _show_actor(self, actor: Actor, call_time, previous_actor: Actor = None):
+    def _show_actor(self, actor: Actor, call_time: float, previous_actor: Actor = None) -> float:
+        """displays the actor by removing the previous and displaying the new given.
+        It uses the filters to determine the color based on action, urgency, direction.
+        Color could be None if any color in the cases of flashing, etc. """
         # first clear existing pixels, then set new and show in same batch to avoid race
         if previous_actor is not None:
             previous_pixel_indexes = self._pixel_indexes_for_actor(previous_actor)
@@ -71,7 +72,8 @@ class LedCommunicator(Communicator, HasAnimation):
                     seconds_til_refresh = min(seconds_til_refresh, seconds_for_filter)
         return seconds_til_refresh
 
-    def no_longer_sees(self, actor: Actor) -> LedStrip:
+    def no_longer_sees(self, actor: Actor) -> None:
+
         super().no_longer_sees(actor)
         pixel_indexes = self._pixel_indexes_for_actor(actor)
         for index in pixel_indexes:
@@ -91,7 +93,7 @@ class LedCommunicator(Communicator, HasAnimation):
         previous_actor2 = None
         while i < FULL_CIRCLE_DEGREES:
             actor1 = Actor(actor_id=actor_id, bearing=i)
-            actor2 = Actor(actor_id=actor_id, bearing=FULL_CIRCLE_DEGREES-i)
+            actor2 = Actor(actor_id=actor_id, bearing=FULL_CIRCLE_DEGREES - i)
             self.sees(actor=actor1, previous_actor=previous_actor1)
             self.sees(actor=actor2, previous_actor=previous_actor2)
             previous_actor1 = actor1

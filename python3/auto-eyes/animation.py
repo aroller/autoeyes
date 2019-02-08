@@ -9,6 +9,6 @@ class HasAnimation(metaclass=ABCMeta):
     @abstractmethod
     def animate(self, actors: dict, time: float) -> float:
         """Any implementation will change the view to show actions to be taken.
-            :return float requesting the call back to animate or None if not needed
+            :return the number of seconds to call again to properly update animation or None if not needed
         """
         pass
