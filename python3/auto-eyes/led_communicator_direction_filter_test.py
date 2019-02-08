@@ -39,3 +39,20 @@ class LedCommunicatorDirectionFilterTest(unittest.TestCase):
         self.assertEqual(colors5, direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + 1.8))
         self.assertEqual(colors5, direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + 1.99))
         self.assertEqual(colors1, direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + 2))
+
+    def test_left_sequence_with_no_urgency(self):
+        actor = Actor(actor_id='a', bearing=33, direction=Direction.LEFT)
+        call_time = 0
+        self.assertEqual(list(reversed(colors1)), direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + 0))
+        self.assertEqual(list(reversed(colors2)), direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + .2))
+        self.assertEqual(list(reversed(colors3)), direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + .4))
+        self.assertEqual(list(reversed(colors4)), direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + .6))
+        self.assertEqual(list(reversed(colors5)), direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + .8))
+        self.assertEqual(list(reversed(colors5)), direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + 0.99))
+        self.assertEqual(list(reversed(colors1)), direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + 1.0))
+        self.assertEqual(list(reversed(colors2)), direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + 1.2))
+        self.assertEqual(list(reversed(colors3)), direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + 1.4))
+        self.assertEqual(list(reversed(colors4)), direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + 1.6))
+        self.assertEqual(list(reversed(colors5)), direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + 1.8))
+        self.assertEqual(list(reversed(colors5)), direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + 1.99))
+        self.assertEqual(list(reversed(colors1)), direction_filter.apply(actor=actor, colors=colors5, call_time=call_time + 2))

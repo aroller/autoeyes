@@ -5,7 +5,7 @@ from colour import Color
 
 from animation import HasAnimation
 from communicator import Communicator
-from actor import Actor, Action, Urgency
+from actor import Actor, Action, Urgency, Direction
 from led_strip import LedStrip
 from time import sleep, time
 
@@ -89,7 +89,6 @@ class LedCommunicator(Communicator, HasAnimation):
         i = 0
         previous_actor1 = None
         previous_actor2 = None
-        actor = None
         while i < FULL_CIRCLE_DEGREES:
             actor1 = Actor(actor_id=actor_id, bearing=i)
             actor2 = Actor(actor_id=actor_id, bearing=FULL_CIRCLE_DEGREES-i)
@@ -98,8 +97,10 @@ class LedCommunicator(Communicator, HasAnimation):
             previous_actor1 = actor1
             previous_actor2 = actor2
             sleep(0.005)
-            i = i + 1
+            i = i + 5
         sleep(1.0)
+        self.no_longer_sees(previous_actor1)
+        self.no_longer_sees(previous_actor2)
         seen = Actor(actor_id='seen', bearing=30, action=Action.SEEN)
         moving = Actor(actor_id='moving', bearing=10, action=Action.MOVING)
         slowing = Actor(actor_id='slowing', bearing=-10, action=Action.SLOWING)
@@ -250,11 +251,15 @@ class DirectionFilter(ActorColorFilter):
             seconds_for_sequence = self.seconds_for_sequence(actor)
             pixel_count_to_light = floor(pixel_count * call_time / seconds_for_sequence) % pixel_count
             sequence_colors = [None] * len(colors)
+
             for index, color in enumerate(colors):
                 if index <= pixel_count_to_light:
                     sequence_colors[index] = color
                 else:
                     sequence_colors[index] = None
+            # reverse the colors for the opposite direction
+            if actor.direction == Direction.LEFT:
+                sequence_colors = list(reversed(sequence_colors))
         return sequence_colors
 
     def seconds_til_refresh(self, actor: Actor):
