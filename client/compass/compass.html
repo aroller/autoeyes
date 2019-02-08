@@ -16,82 +16,84 @@
     <p class="lead">Point the phone at the actor.</p>
     <h1 class="display-4"><span id="bearing">--</span>°</h1>
     <hr/>
-    <a class="btn btn-primary btn-sm" href="#" role="button" onclick="setCurrentHeadingToFront()">Set Vehicle
+    <a class="btn btn-primary btn-md" href="#" role="button" onclick="setCurrentHeadingToFront()">Set Vehicle
         Heading</a>
     <p>When inside the vehicle, point to the front and
         press.</p>
     <hr>
     <div>
         <h5>Actor</h5>
-        <div class="btn-group btn-group-toggle" data-toggle="buttons" >
-            <label class="btn btn-primary  btn-md active">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-primary  btn-lg active">
                 <input type="radio" name="actorId" value="A" checked onchange="actorIdSelected()">A
             </label>
-            <label class="btn btn-primary  btn-md">
+            <label class="btn btn-primary  btn-lg">
                 <input type="radio" name="actorId" value="B" onchange="actorIdSelected()">B
             </label>
-            <label class="btn btn-primary btn-md ">
+            <label class="btn btn-primary btn-lg ">
                 <input type="radio" name="actorId" value="C" onchange="actorIdSelected()">C
             </label>
         </div>
     </div>
-</div>
-<hr/>
-<div>
-    <h5>Action</h5>
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-primary  btn-sm active">
-            <input type="radio" name="action" value="seen" checked onchange="actionSelected()">Seen
-        </label>
-        <label class="btn btn-primary  btn-sm ">
-            <input type="radio" name="action" value="moving" onchange="actionSelected()">Moving
-        </label>
-        <label class="btn btn-primary  btn-sm ">
-            <input type="radio" name="action" value="slowing" onchange="actionSelected()">Slowing
-        </label>
-        <label class="btn btn-primary  btn-sm">
-            <input type="radio" name="action" value="stopped" onchange="actionSelected()">Stopped
-        </label>
+
+    <hr/>
+    <div>
+        <h5>Action</h5>
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-primary  btn-md active">
+                <input type="radio" name="action" value="seen" checked onchange="actionSelected()">Seen
+            </label>
+            <label class="btn btn-primary  btn-md ">
+                <input type="radio" name="action" value="moving" onchange="actionSelected()">Moving
+            </label>
+            <label class="btn btn-primary  btn-md ">
+                <input type="radio" name="action" value="slowing" onchange="actionSelected()">Slowing
+            </label>
+            <label class="btn btn-primary  btn-md">
+                <input type="radio" name="action" value="stopped" onchange="actionSelected()">Stopped
+            </label>
+        </div>
     </div>
-</div>
-<hr/>
-<div>
-    <h5>Direction</h5>
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-primary  btn-sm active">
-            <input type="radio" name="direction" value="none" checked onchange="directionSelected()">None
-        </label>
-        <label class="btn btn-primary  btn-sm">
-            <input type="radio" name="direction" value="left" onchange="directionSelected()">Left
-        </label>
-        <label class="btn btn-primary  btn-sm">
-            <input type="radio" name="direction" value="right" onchange="directionSelected()">Right
-        </label>
+    <hr/>
+    <div>
+        <h5>Direction</h5>
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-primary  btn-md active">
+                <input type="radio" name="direction" value="none" checked onchange="directionSelected()">None
+            </label>
+            <label class="btn btn-primary  btn-md">
+                <input type="radio" name="direction" value="left" onchange="directionSelected()">Left
+            </label>
+            <label class="btn btn-primary  btn-md">
+                <input type="radio" name="direction" value="right" onchange="directionSelected()">Right
+            </label>
+        </div>
     </div>
-</div>
-<hr/>
-<div>
-    <h5>Urgency</h5>
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-primary  btn-sm active">
-            <input type="radio" name="urgency" value="none" checked onchange="urgencySelected()">None
-        </label>
-        <label class="btn btn-primary  btn-sm">
-            <input type="radio" name="urgency" value="request" onchange="urgencySelected()">Request
-        </label>
-        <label class="btn btn-primary btn-sm ">
-            <input type="radio" name="urgency" value="demand" onchange="urgencySelected()">Demand
-        </label>
+    <hr/>
+    <div>
+        <h5>Urgency</h5>
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-primary  btn-md active">
+                <input type="radio" name="urgency" value="none" checked onchange="urgencySelected()">None
+            </label>
+            <label class="btn btn-primary  btn-md">
+                <input type="radio" name="urgency" value="request" onchange="urgencySelected()">Request
+            </label>
+            <label class="btn btn-primary btn-md ">
+                <input type="radio" name="urgency" value="demand" onchange="urgencySelected()">Demand
+            </label>
+        </div>
     </div>
-</div>
+
 <hr/>
 <div class="container-fluid">
     <div id="updated">-</div>
 </div>
 <hr/>
-<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#settingsModal">
+<button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#settingsModal">
     Settings
 </button>
+</div>
 <p>
     <small>v3</small>
 </p>
