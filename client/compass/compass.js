@@ -93,8 +93,12 @@ function setCurrentHeadingToFront() {
 }
 
 
+let getApiUrl = function () {
+    return `http://${host}:9090/v1.0`;
+};
+
 let baseUrl = function () {
-    const apiUrl = `http://${host}:9090/v1.0`;
+    const apiUrl = getApiUrl();
     const timeSeen = new Date().toISOString();
     return `${apiUrl}/actors/${actorId}?bearing=${bearing}&timeSeen=${timeSeen}`;
 };
@@ -131,8 +135,16 @@ function sendDelete() {
             showUpdate(error);
         })
     }
-
-
 }
+
+function shutDown() {
+    let apiUrl1 = getApiUrl();
+    axios.put(`${apiUrl1}/systems`).then(data => {
+        showUpdate("Shutting down Raspberry PI.");
+    }, error => {
+        showUpdate(error);
+    })
+}
+
 
 

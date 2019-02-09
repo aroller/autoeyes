@@ -5,7 +5,7 @@ import threading
 from http import HTTPStatus
 from pydoc import locate
 from subprocess import call
-from time import time
+from time import time, sleep
 
 import connexion
 import requests
@@ -87,6 +87,8 @@ def system_shutdown():
     """Shuts down the raspberry pi gracefully.  Yes, probably a bad idea and something better provided
         from a physical switch.
     """
+    vehicle.sees(Actor('shutdown',0))
+    sleep(1)
     vehicle.clear()
     print("********* Shut Down command given *********")
     call("sudo shutdown -h now", shell=True)
