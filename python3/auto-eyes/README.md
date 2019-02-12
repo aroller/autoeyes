@@ -39,3 +39,9 @@ The use of Quart is delayed, for simplicity's sake, since it requires python 3.7
 built for Raspberry PI](https://www.ramoonus.nl/2018/06/30/installing-python-3-7-on-raspberry-pi/) as of 12/15/2019. 
 
 More documentation to come...
+
+
+Setup Access Point
+
+http://www.raspberryconnect.com/network/item/333-raspberry-pi-hotspot-access-point-dhcpcd-method
+

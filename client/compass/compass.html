@@ -18,8 +18,7 @@
     <hr/>
     <a class="btn btn-primary btn-md" href="#" role="button" onclick="setCurrentHeadingToFront()">Set Vehicle
         Heading</a>
-    <p>When inside the vehicle, point to the front and
-        press.</p>
+    <p>When inside the vehicle, point to the front and press.</p>
     <hr>
     <div>
         <h5>Actor</h5>
@@ -34,6 +33,15 @@
                 <input type="radio" name="actorId" value="C" onchange="actorIdSelected()">C
             </label>
         </div>
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-primary  btn-sm active">
+                <input type="radio" name="actorEnabled" value="on" checked onchange="actorEnabledSelected()">On
+            </label>
+            <label class="btn btn-primary  btn-sm">
+                <input type="radio" name="actorEnabled" value="off" onchange="actorEnabledSelected()">Off
+            </label>
+        </div>
+
     </div>
 
     <hr/>
@@ -95,7 +103,7 @@
 </button>
 </div>
 <p>
-    <small>v6</small>
+    <small>v7</small>
 </p>
 
 

@@ -6,12 +6,13 @@ let bearingOffset = 0;
 //minimize too many updates
 let lastBearingSent = 0;
 let lastTimestampSent = 0;
-let millisecondsBetweenSending = 100;
+let millisecondsBetweenSending = 50;
 
 const urlParams = new URLSearchParams(window.location.search);
 let host = urlParams.get('host');
 
 let actorId;
+let actorEnabled;
 let bearing;
 let action;
 let direction;
@@ -19,10 +20,11 @@ let urgency;
 
 function initialize() {
     if (!host) {
-        host = "10.0.0.179"
+        host = "192.168.50.10"
     }
     actionSelected();
     actorIdSelected();
+    actorEnabledSelected();
     showUpdate(host);
     if (window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', function (event) {
@@ -83,6 +85,19 @@ function actorIdSelected() {
     put();
 }
 
+function actorEnabledSelected() {
+    const enabledValue = document.querySelector('input[name="actorEnabled"]:checked').value;
+    const nowEnabled = enabledValue === "on";
+
+    if (!nowEnabled && actorEnabled) {
+        sendDelete();
+    }else
+    actorEnabled = nowEnabled;
+    if(nowEnabled){
+        put();
+    }
+}
+
 
 /**
  * Tares the bearing to face the current direction so 0 degrees is facing the direction when the button is pressed.
@@ -104,7 +119,7 @@ let baseUrl = function () {
 };
 
 function put() {
-    if (actorId) {
+    if (actorId && actorEnabled) {
         let url = baseUrl();
         if (action) {
             url += `&action=${action}`;
