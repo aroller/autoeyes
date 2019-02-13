@@ -121,25 +121,30 @@ let baseUrl = function () {
 };
 
 function put() {
-    if (actorId) {
-        let url = baseUrl();
-        if (action) {
-            url += `&action=${action}`;
-        }
-        if (direction && direction !== "none") {
-            url += `&direction=${direction}`;
-        }
-        if (urgency && urgency !== "none") {
-            url += `&urgency=${urgency}`;
-        }
-        axios.put(url).then(data => {
+    if(actorEnabled){
+        if (actorId) {
+            let url = baseUrl();
+            if (action) {
+                url += `&action=${action}`;
+            }
+            if (direction && direction !== "none") {
+                url += `&direction=${direction}`;
+            }
+            if (urgency && urgency !== "none") {
+                url += `&urgency=${urgency}`;
+            }
+            axios.put(url).then(data => {
 
-        }, error => {
-            showUpdate(error);
-        })
-    } else {
-        console.log(`No actor selected.`)
+            }, error => {
+                showUpdate(error);
+            })
+        } else {
+            console.log(`No actor selected.`)
+        }
+    }else{
+        console.log(`Actor is disabled`);
     }
+
 
 }
 
