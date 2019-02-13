@@ -91,9 +91,11 @@ function actorEnabledSelected() {
 
     if (!nowEnabled && actorEnabled) {
         sendDelete();
-    }else
+    }
+
     actorEnabled = nowEnabled;
-    if(nowEnabled){
+
+    if (nowEnabled) {
         put();
     }
 }
@@ -119,7 +121,7 @@ let baseUrl = function () {
 };
 
 function put() {
-    if (actorId && actorEnabled) {
+    if (actorId) {
         let url = baseUrl();
         if (action) {
             url += `&action=${action}`;
