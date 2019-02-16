@@ -1,10 +1,10 @@
-# Autoculi Demo
+# Auto Eyes Demo
 __LED Light Strip Controlled by Python on Raspberry PI__
 
-Project Autoculi is about creating common communication protocols for common road scenarios, however,
+Project _Auto Eyes_ is about creating common communication protocols for common road scenarios, however,
 technology works better when demonstrated in the real world.
 
-Follow this guide to build your own real world example and see __Autoculi__ work with your own eyes.
+Follow this guide to build your own real world example and see _Auto Eyes_ work with your own eyes.
 
 
 ## Purchase
@@ -82,9 +82,9 @@ Change the LED Count on line 13:
 
 Run the test again and you should see your entire strip light up.
 
-__Autoculi__ software setup _To Be Determined_.
+__Auto Eyes__ software setup _To Be Determined_.
 
 ## Demo 
 
-__Autoculi__ scenario demos _To Be Determined_.
+__Auto Eyes__ scenario demos _To Be Determined_.
 

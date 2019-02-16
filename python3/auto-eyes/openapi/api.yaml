@@ -1,12 +1,12 @@
 openapi: "3.0.0"
 
 info:
-    title: Autoculi
+    title: Auto Eyes
     version: "1.0"
 servers:
     - url: http://localhost:9090/v1.0
       description: Typically used for testing during local development.
-    - url: http://av-eyes.local:9090/v1.0
+    - url: http://192.168.50.1:9090/v1.0
       description: A Raspberry PI server running on the local network.
 
 paths:
