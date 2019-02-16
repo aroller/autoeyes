@@ -1,4 +1,4 @@
-# Project Autoculi (Auto Eyes)
+# Project Auto Eyes
 __Autononomous Vehicle to Human Communication__
 
 
@@ -20,7 +20,7 @@ Self-driving vehicles don't have a human at the wheel so pedestrians need confir
 
 ## Autos Need Eyes 
 
-_Autoculi_ (Auto Eyes) is a simple lighting system for one-way communication from the robot to pedestrians, cyclists and other mobile humans.
+_Auto Eyes_ is a simple lighting system for one-way communication from the robot to pedestrians, cyclists and other mobile humans.
 
 <img src="images/Open-source-hardware-logo.svg" width="50px" style="float:right;"  title="Open Source Software / Hardware">
 
@@ -29,11 +29,26 @@ _Autoculi_ (Auto Eyes) is a simple lighting system for one-way communication fro
 [Open source](https://github.com/aroller/autoculi) and open collaboration will provide a safe and consistent solution to society for the best adoption of autonomous vehicles.
 
 <img src="images/noun_Mission_712151.svg" width="50px" style="float:right;"  title="Project Mission">
+
 ## Mission 
 
 To improve mobility safety and autonomous vehicle acceptance by creating standard protocols for autonomous vehicles to communicate with pedestrians, bicyclists and other personal mobility actors through open collaboration.
 
+<img src="images/noun_featured_1361398.svg" width="50px" style="float:right;"  title="Open Source Software / Hardware">
 
+## Features 
+
+* ___Requirements___ documenting the common scenarios and how an autonomous vehicle will use LEDs to communicate each scenario.
+* ___Reference implementation___ to demonstrate how the lights work in the physical world. 
+
+<img src="images/noun_audience_1871813.svg" width="50px" style="float:right;"  title="Open Source Software / Hardware">
+
+## Audience
+
+* Autonomous vehicle manufacturers
+* Autonomous vehicle policy makers (Governments)
+* Autonomous vehicle safety advocates 
+* Autonomous vehicle fleet operators
 ---
 
 <div class="text-center">

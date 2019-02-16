@@ -1,9 +1,9 @@
-# Autoculi Python3 Library
+# Auto Eyes Python3 Demo
 
-Provides the features at a portable level decoupling the 
-LED strip that will be used as the display.
+A reference implementation of the features displayed on a consumer 
+available LED strip controlled by a REST API. 
 
-see [Project Autoculi](https://autoculi.org);
+see [Project Auto Eyes](https://autoeyes.org);
 
 
 Run the _print_ unit tests to demonstrate the scenarios 
