@@ -11,7 +11,7 @@ setuptools.setup(
     description="A simple lighting system for Autonomous Vehicle to Human Communications",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/aroller/autoculi",
+    url="https://github.com/aroller/autoeyes",
     packages=setuptools.find_packages(),
     # https://pypi.org/project/{package name} for more docs
     install_requires=[

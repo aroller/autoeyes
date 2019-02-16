@@ -26,7 +26,7 @@ _Auto Eyes_ is a simple lighting system for one-way communication from the robot
 
 ## Open Source 
 
-[Open source](https://github.com/aroller/autoculi) and open collaboration will provide a safe and consistent solution to society for the best adoption of autonomous vehicles.
+[Open source](https://github.com/aroller/autoeyes) and open collaboration will provide a safe and consistent solution to society for the best adoption of autonomous vehicles.
 
 <img src="images/noun_Mission_712151.svg" width="50px" style="float:right;"  title="Project Mission">
 
@@ -36,7 +36,7 @@ To improve mobility safety and autonomous vehicle acceptance by creating standar
 
 <img src="images/noun_featured_1361398.svg" width="50px" style="float:right;"  title="Open Source Software / Hardware">
 
-## Features 
+## Project Scope 
 
 * ___Requirements___ documenting the common scenarios and how an autonomous vehicle will use LEDs to communicate each scenario.
 * ___Reference implementation___ to demonstrate how the lights work in the physical world. 
@@ -49,6 +49,9 @@ To improve mobility safety and autonomous vehicle acceptance by creating standar
 * Autonomous vehicle policy makers (Governments)
 * Autonomous vehicle safety advocates 
 * Autonomous vehicle fleet operators
+* Autonomous vehicle enthusiasts
+* Mobility fleet operators
+* Mobility safety advocates
 
 ---
 

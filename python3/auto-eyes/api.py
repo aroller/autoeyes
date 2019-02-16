@@ -151,7 +151,7 @@ def animate():
 
 def main():
     app = connexion.FlaskApp(__name__, port=9090, specification_dir='openapi/')
-    app.add_api('api.yaml', arguments={'title': 'Autoculi'})
+    app.add_api('api.yaml', arguments={'title': 'Auto Eyes'})
     CORS(app.app)
     atexit.register(animator_thread_interrupt)
     app.run()
