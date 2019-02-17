@@ -9,6 +9,7 @@ from time import time, sleep
 
 import connexion
 import requests
+from flask import send_from_directory
 from flask_cors import CORS
 
 from actor import Actor, Action, Direction, Urgency
@@ -83,11 +84,16 @@ def list_actors():
     return ApiModelSerializer.to_json(vehicle.actors.values())
 
 
+def client_file(path):
+    """Serves up static html files and supporting resources like js, images, etc."""
+    return send_from_directory('client', path)
+
+
 def system_shutdown():
     """Shuts down the raspberry pi gracefully.  Yes, probably a bad idea and something better provided
         from a physical switch.
     """
-    vehicle.sees(Actor('shutdown',0))
+    vehicle.sees(Actor('shutdown', 0))
     sleep(1)
     vehicle.clear()
     print("********* Shut Down command given *********")
@@ -150,7 +156,9 @@ def animate():
 
 
 def main():
-    app = connexion.FlaskApp(__name__, port=9090, specification_dir='openapi/')
+    app = connexion.FlaskApp(__name__,
+                             port=9090,
+                             specification_dir='openapi/')
     app.add_api('api.yaml', arguments={'title': 'Auto Eyes'})
     CORS(app.app)
     atexit.register(animator_thread_interrupt)

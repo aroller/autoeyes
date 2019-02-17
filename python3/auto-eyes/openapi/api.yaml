@@ -119,7 +119,26 @@ paths:
                             schema:
                                 type: string
                                 example: anything
+    /clients/{path}:
+        get:
+            summary: Files for Client Apps
+            description: Acts as a web server for serving up static html, js, images from the client directory.
+            operationId: api.client_file
+            parameters:
+                -   in: path
+                    name: path
+                    description: Unique ientifier the AV uses to track the same actor.
+                    required: true
+                    schema:
+                        type: string
+                        example: "abc123"
+            responses:
+                200:
+                    description: The static file requested
 
+
+            tags:
+                - clients
 components:
     schemas:
         Actor:
