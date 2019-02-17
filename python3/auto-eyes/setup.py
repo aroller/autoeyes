@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="auto-eyes",
-    version="1.0.0",
+    name="autoeyes",
+    version="0.0.1",
     author="Aaron Roller",
     author_email="aaron.roller@aawhere.com",
     description="A simple lighting system for Autonomous Vehicle to Human Communications",
