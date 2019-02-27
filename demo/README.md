@@ -4,8 +4,16 @@ __LED Light Strip Controlled by Python on Raspberry PI__
 Project _Auto Eyes_ is about creating common communication protocols for common road scenarios, however,
 technology works better when demonstrated in the real world.
 
-Follow this guide to build your own real world example and see _Auto Eyes_ work with your own eyes.
+Follow this guide to build your own real world example and see _Auto Eyes_ work with your own eyes.  
 
+# What it Does
+
+Point a mobile phone at an _Actor_ and the lights on the LED strip follow the _Actor_ giving the sense the _Actor_ is being watched.
+
+<img src="https://docs.google.com/drawings/d/e/2PACX-1vQ5ohc6EMHRBjyLlLMU2Uz-lvJSsrhqxNgJnNhsBcoGKWemuTr97Ohl6objAnpldiR5kEUUdCSqlzxz/pub?w=960&amp;h=720">
+
+
+`Video demo coming soon`
 
 ## Purchase
 
@@ -23,6 +31,7 @@ __Optional:__
 ## Assemble
 
 1. Setup the Raspberry PI with the included USB power supply, per the instructions that came with the kit.  
+   1. Install the _Raspian Lite_ OS without the desktop environment.
 1. Shut the Raspberry PI  down once you confirm it works (either by direct keyboard+monitor or ssh).
 1. Connect the LED Strip power wires to the _female DC connector_ using a small screwdriver.
    1. Negative (-) connects to black.
@@ -46,6 +55,9 @@ Source: [CanaKit](https://www.canakit.com/Media/CanaKit-Raspberry-Pi-Quick-Start
 1. Continue with the software setup to confirm the light strip is working.
 
 ## Software Setup 
+
+
+### Test the Light Strip
 
 Demonstrate the light strip works by running a quick test in python3.
 
@@ -82,7 +94,16 @@ Change the LED Count on line 13:
 
 Run the test again and you should see your entire strip light up.
 
-__Auto Eyes__ software setup _To Be Determined_.
+### Auto Eyes Setup
+
+Install git so you can download the source.
+
+`sudo apt-get install git`
+
+Clone the AutoEyes source code.
+
+`git clone https://github.com/aroller/autoeyes`
+
 
 ## Demo 
 
