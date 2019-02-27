@@ -124,11 +124,29 @@ Run the API connecting to the LED strip.
 
 Confirm LED Strip shows splash sequence of two white lights looping around in opposite directions ending with 4 segments of different colors.
 
----
+`curl -X PUT "http://autoeyes.local:9090/v1.0/actors/abc123?bearing=5" -H "accept: application/json"`
+
+Confirm the first 5 LEDs are lit in white.
+
+#### Get to Know the API 
 
 Visit the API in a web browser of a computer on the same network.
 
 `http://autoeyes.local:9090/v1.0/ui/`
+
+Use the web api user interface to PUT various combinations of bearing, action, direction, urgency. You should see the LED lights change accordingly.
+
+#### Run the Compass Client
+
+View the compass UI in a web browser on a computer.
+
+`http://autoeyes.local:9090/client/compass.html`
+
+
+In a mobile web browser you may need to access by ip address. 
+
+`http://{autoeyes.local ip address}/client/compass.html` 
+
 
 
 ## Demo 
