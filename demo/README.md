@@ -96,6 +96,14 @@ Run the test again and you should see your entire strip light up.
 
 ### Auto Eyes Setup
 
+Change the hostname to `autoeyes`.
+
+`sudo raspi-config` -> `2` -> `N1` -> `Ok` -> `autoeyes` -> `Ok`  then Finish and reboot
+
+Confirm hostname changed and determine IP address.
+
+`ping autoeyes.local` 
+
 Install git so you can download the source.
 
 `sudo apt-get install git`
@@ -103,6 +111,24 @@ Install git so you can download the source.
 Clone the AutoEyes source code.
 
 `git clone https://github.com/aroller/autoeyes`
+
+Install package dependencies.
+
+`sudo python3 setup.py install`
+
+Run the API connecting to the LED strip.
+
+`cd ~/autoeyes/demo/python`
+
+`sudo AV_EYES_LED_MODE=true python3 api.py`
+
+Confirm LED Strip shows splash sequence of two white lights looping around in opposite directions ending with 4 segments of different colors.
+
+---
+
+Visit the API in a web browser of a computer on the same network.
+
+`http://autoeyes.local:9090/v1.0/ui/`
 
 
 ## Demo 

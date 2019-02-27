@@ -6,8 +6,10 @@ info:
 servers:
     - url: http://localhost:9090/v1.0
       description: Typically used for testing during local development.
+    - url: http://autoeyes.local:9090/v1.0
+      description: When connected to the same network as the Raspberry PI.
     - url: http://192.168.50.10:9090/v1.0
-      description: A Raspberry PI server running on the local network.
+      description: When connected to the Raspberry PI access point.
 
 paths:
     /actors/{actorId}:
