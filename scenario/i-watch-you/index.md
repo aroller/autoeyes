@@ -5,6 +5,6 @@
   <p class="lead">
     The light follows the pedestrian giving comfort and education knowing the vehicle is watching. 
   </p>
-  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="../i-see-you">&laquo; Previous</a>
-  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="../no-sneaking">Next &raquo;</a>
+  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="{{site.baseurl}}/i-see-you">&laquo; Previous</a>
+  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="{{site.baseurl}}/no-sneaking">Next &raquo;</a>
 </div>
