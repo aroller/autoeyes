@@ -5,6 +5,6 @@
   <p class="lead">
     Those in a group see the same lights, but indvidual lights follow each pedestrian as they separate.
   </p>
-  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="/scenario/no-sneaking">&laquo; Previous</a>
-  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="/scenario/move-forward">Next &raquo;</a>
+  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="../no-sneaking">&laquo; Previous</a>
+  <a class="btn btn-primary btn-lg" tabindex="-1" role="button"  href="../move-forward">Next &raquo;</a>
 </div>
