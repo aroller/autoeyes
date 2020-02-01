@@ -1,4 +1,4 @@
 theme: jekyll-theme-slate
 title: Project Auto Eyes
 description: A simple lighting system for Autonomous Vehicle to Human Communications.
-baseurl: /
+baseurl: https://aroller.github.io/autoeyes/
